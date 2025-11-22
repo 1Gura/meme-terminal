@@ -16,6 +16,7 @@ import {LayoutDashboard, PlusCircle, User,} from "lucide-react";
 
 import Link from "next/link";
 import {useRouter} from "next/router";
+import {SpotlightCursor} from "@/shared/components/spootlight-cursor";
 
 export function LaunchpadLayout({ children }: { children: ReactNode }) {
     const router = useRouter();
@@ -24,6 +25,7 @@ export function LaunchpadLayout({ children }: { children: ReactNode }) {
 
     return (
         <SidebarProvider>
+            <SpotlightCursor />
             <div className="flex w-full h-screen bg-[#0a0f1a] text-zinc-100">
 
                 <Sidebar className="bg-[#111827]">
@@ -199,8 +201,11 @@ export function LaunchpadLayout({ children }: { children: ReactNode }) {
                 </Sidebar>
 
                 {/* MAIN CONTENT */}
-                <main className="w-full flex-1 overflow-y-auto px-8 py-6">
-                    {children}
+                <main className="w-full flex-1 overflow-y-auto px-8 py-6 card">
+                    <div className='content'>
+                        {children}
+
+                    </div>
                 </main>
 
             </div>
