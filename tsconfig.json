@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
+    "allowJs": false,
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
@@ -13,17 +13,26 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,
+
+    "baseUrl": "src",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["*"],
+      "@/shared/*": ["shared/*"],
+      "@/shared/api/*": ["shared/api/*"],
+      "@/shared/ws/*": ["shared/ws/*"],
+      "@/shared/utils/*": ["shared/utils/*"],
+      "@/shared/context/*": ["shared/context/*"],
+      "@/shared/layouts/*": ["shared/layouts/*"],
+      "@/shared/ui/*": ["shared/ui/*"],
+      "@/shared/ui/components/*": ["shared/ui/components/*"],
+      "@/features/*": ["features/*"]
     }
   },
   "include": [
     "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
+    "src/**/*",
     ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts",
-    "**/*.mts"
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }
