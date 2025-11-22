@@ -1,9 +1,7 @@
 import Profile from "../../src/features/profile";
 
 const ProfilePage = () => {
-    return (
-        <Profile/>
-    );
+  return <Profile />;
 };
 
 export default ProfilePage;

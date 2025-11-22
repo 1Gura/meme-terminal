@@ -1,13 +1,13 @@
 "use client";
 
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
 export function ClientTime({ date }: { date: string }) {
-    const [formatted, setFormatted] = useState("");
+  const [formatted, setFormatted] = useState("");
 
-    useEffect(() => {
-        setFormatted(new Date(date).toLocaleString("en-US"));
-    }, [date]);
+  useEffect(() => {
+    setFormatted(new Date(date).toLocaleString("en-US"));
+  }, [date]);
 
-    return <>{formatted}</>;
+  return <>{formatted}</>;
 }

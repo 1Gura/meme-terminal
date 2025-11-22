@@ -1,9 +1,7 @@
 import Portfolio from "../../src/features/portfolio";
 
 const PortfolioPage = () => {
-    return (
-        <Portfolio/>
-    );
+  return <Portfolio />;
 };
 
 export default PortfolioPage;
