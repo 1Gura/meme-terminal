@@ -103,6 +103,9 @@ export function LaunchpadLayout({ children }: { children: ReactNode }) {
                                         <Link href="/create-token">
                                             <PlusCircle />
                                             <span>Create Meme</span>
+                                            {isActive("/create-token") && (
+                                                <span className="ml-auto w-2 h-2 bg-orange-200 rounded-full" />
+                                            )}
                                         </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
@@ -139,6 +142,9 @@ export function LaunchpadLayout({ children }: { children: ReactNode }) {
                                         <Link href="/profile">
                                             <User />
                                             <span>Profile</span>
+                                            {isActive("/profile") && (
+                                                <span className="ml-auto w-2 h-2 bg-orange-200 rounded-full" />
+                                            )}
                                         </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
