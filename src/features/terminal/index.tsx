@@ -6,15 +6,17 @@ import {useTokensQuery} from "@/shared/hooks/use-token-query";
 import {mockData} from "@/mocks/terminal-data.mock";
 import {ClientTime} from "@/shared/components/ClientTime";
 import {ClientNumber} from "@/shared/components/ClientNumber";
+import {shortAddress} from "@/shared/utils";
+import {CopyButton} from "@/shared/components/CopyButton";
 
 function Terminal() {
-    const { data, isLoading } = useTokensQuery("1");
+    const {data, isLoading} = useTokensQuery("1");
 
     // пока используем мок
     const tokens = mockData;
 
     return (
-        <div className="w-full max-w-6xl mx-auto">
+        <div className="w-full mx-auto">
             <div className="mt-8 flex items-center gap-3">
                 <input
                     className="w-full h-12 rounded-xl bg-[#111827] px-4 text-sm text-zinc-300 border border-zinc-700 focus:outline-none"
@@ -52,13 +54,13 @@ function Terminal() {
                         {/*    </TableRow>*/}
                         {/*)}*/}
 
-                        { tokens.map((token) => (
+                        {tokens.map((token) => (
                             <TableRow
                                 key={token._id}
                                 className="border-zinc-800 hover:bg-zinc-800/30 transition cursor-pointer"
                             >
                                 {/* TOKEN */}
-                                <TableCell className="col-span-2">
+                                <TableCell className="col-span-2 min-w-[220px] whitespace-normal break-words">
                                     <div className="flex items-center gap-4">
                                         {token.photo ? (
                                             <Image
@@ -77,25 +79,44 @@ function Terminal() {
 
                                             {/* Клиентский вывод времени */}
                                             <div className="text-xs text-zinc-500">
-                                                <ClientTime date={token.createdAt} />
+                                                <ClientTime date={token.createdAt}/>
                                             </div>
                                         </div>
                                     </div>
                                 </TableCell>
 
                                 {/* CA */}
-                                <TableCell>
-                                    <div className="flex flex-col">
-                                        <span className="text-blue-400 cursor-pointer">{token.token}</span>
-                                        <span className="text-xs text-zinc-500">by {token.creator}</span>
+                                <TableCell className="min-w-[180px]">
+                                    <div className="flex flex-col gap-1">
+
+                                        {/* CA */}
+                                        <div className="flex items-center gap-2">
+            <span className="text-blue-400 cursor-pointer font-mono">
+                {shortAddress(token.token, 4, 4)}
+            </span>
+
+                                            <CopyButton text={token.token}/>
+                                        </div>
+
+                                        {/* Creator */}
+                                        <div className="text-xs text-zinc-500 flex gap-1">
+                                            <span>by</span>
+                                            <span className="text-blue-400 font-mono">
+                {shortAddress(token.creator, 4, 4)}
+            </span>
+                                        </div>
                                     </div>
                                 </TableCell>
 
+
                                 {/* VOLUME */}
-                                <TableCell>
+                                <TableCell className="col-span-2 min-w-[220px] whitespace-normal break-words">
                                     <div className="flex flex-col">
                                         <span className="text-white">
-                                            <ClientNumber value={token.marketCapUsd ?? 0} options={{ minimumFractionDigits: 2, maximumFractionDigits: 2 }} />
+                                            <ClientNumber value={token.marketCapUsd ?? 0} options={{
+                                                minimumFractionDigits: 2,
+                                                maximumFractionDigits: 2
+                                            }}/>
                                         </span>
                                         <span className="text-xs">
                                             <span className="text-green-400">{token.buys}</span> /{" "}
@@ -105,7 +126,7 @@ function Terminal() {
                                 </TableCell>
 
                                 {/* MARKET CAP */}
-                                <TableCell>
+                                <TableCell className="col-span-2 min-w-[220px] whitespace-normal break-words">
                                     <div className="flex flex-col">
                                         <span className="text-white">
                                             ${(token.marketCapUsd ?? 0).toFixed(2)}
@@ -117,7 +138,7 @@ function Terminal() {
                                 </TableCell>
 
                                 {/* PROGRESS */}
-                                <TableCell>
+                                <TableCell className="col-span-2 min-w-[220px] whitespace-normal break-words">
                                     <div className="w-full h-2 bg-zinc-700 rounded-full overflow-hidden">
                                         <div
                                             className="h-full bg-orange-400"
@@ -127,7 +148,8 @@ function Terminal() {
                                 </TableCell>
 
                                 {/* HOLDERS */}
-                                <TableCell className="text-white">{token.holders}</TableCell>
+                                <TableCell
+                                    className="col-span-2 min-w-[220px] whitespace-normal break-words">{token.holders}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

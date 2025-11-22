@@ -1,6 +1,12 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import {type ClassValue, clsx} from "clsx"
+import {twMerge} from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
+}
+
+export function shortAddress(addr: string, start = 4, end = 4) {
+  if (!addr) return "";
+  if (addr.length <= start + end) return addr;
+  return `${addr.slice(0, start)}...${addr.slice(-end)}`;
 }
