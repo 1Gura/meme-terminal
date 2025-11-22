@@ -6,13 +6,6 @@ import Image from "next/image";
 function Terminal() {
     return (
         <div className="w-full max-w-6xl mx-auto">
-            {/* HEADER */}
-            <h1 className="text-3xl font-bold text-white">Welcome to LaunchPad Terminal</h1>
-            <p className="mt-2 max-w-xl text-zinc-400">
-                Discover, trade and launch Solana meme tokens in one interface.
-            </p>
-
-            {/* SEARCH */}
             <div className="mt-8 flex items-center gap-3">
                 <input
                     className="w-full h-12 rounded-xl bg-[#111827] px-4 text-sm text-zinc-300 border border-zinc-700 focus:outline-none"

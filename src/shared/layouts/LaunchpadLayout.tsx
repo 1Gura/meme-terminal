@@ -1,6 +1,4 @@
-"use client";
-
-import {ReactNode} from "react";
+import {ReactNode, useState} from "react";
 import {
     Sidebar,
     SidebarContent,
@@ -16,15 +14,19 @@ import {LayoutDashboard, PlusCircle, User,} from "lucide-react";
 
 import Link from "next/link";
 import {useRouter} from "next/router";
-import {SpotlightCursor} from "@/shared/components/spootlight-cursor";
+import {MobileHeader} from "@/shared/components/MobileHeader";
+import SpotlightCursor from "@/shared/components/SpootlightCursor";
 
 export function LaunchpadLayout({ children }: { children: ReactNode }) {
     const router = useRouter();
 
     const isActive = (path: string) => router.pathname === path;
 
+    const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+
     return (
         <SidebarProvider>
+            <MobileHeader onMenu={() => setIsMobileSidebarOpen(true)} />
             <div className="grid-background"/>
             <SpotlightCursor/>
             <div className="flex w-full h-screen bg-[#0a0f1a] text-zinc-100">
@@ -200,7 +202,7 @@ export function LaunchpadLayout({ children }: { children: ReactNode }) {
                 </Sidebar>
 
                 {/* MAIN CONTENT */}
-                <main className="w-full flex-1 overflow-y-auto px-8 py-6 card">
+                <main className="w-full flex-1 overflow-y-auto px-8 py-6 card pt-[80px] md:pt-6">
                     <div className='content'>
                         {children}
                     </div>

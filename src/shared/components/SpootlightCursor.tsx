@@ -1,8 +1,6 @@
-"use client";
-
 import {useEffect, useRef} from "react";
 
-export function SpotlightCursor() {
+function SpotlightCursor() {
     const lightRef = useRef<HTMLDivElement>(null);
 
     const x = useRef(0);
@@ -96,4 +94,6 @@ export function SpotlightCursor() {
         />
     );
 }
+
+export default SpotlightCursor;
 

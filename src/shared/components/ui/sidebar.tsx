@@ -1,28 +1,15 @@
-"use client"
-
 import * as React from "react"
-import { Slot } from "@radix-ui/react-slot"
-import { cva, type VariantProps } from "class-variance-authority"
-import { PanelLeftIcon } from "lucide-react"
+import {Slot} from "@radix-ui/react-slot"
+import {cva, type VariantProps} from "class-variance-authority"
+import {PanelLeftIcon} from "lucide-react"
 
-import { cn } from "@/shared/utils"
-import { Button } from "@/shared/components/ui/button"
-import { Input } from "@/shared/components/ui/input"
-import { Separator } from "@/shared/components/ui/separator"
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/shared/components/ui/sheet"
-import { Skeleton } from "@/shared/components/ui/skeleton"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/shared/components/ui/tooltip"
+import {cn} from "@/shared/utils"
+import {Button} from "@/shared/components/ui/button"
+import {Input} from "@/shared/components/ui/input"
+import {Separator} from "@/shared/components/ui/separator"
+import {Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle,} from "@/shared/components/ui/sheet"
+import {Skeleton} from "@/shared/components/ui/skeleton"
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger,} from "@/shared/components/ui/tooltip"
 import {useIsMobile} from "@/shared/hooks/use-mobile";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state"
@@ -31,6 +18,7 @@ const SIDEBAR_WIDTH = "16rem"
 const SIDEBAR_WIDTH_MOBILE = "18rem"
 const SIDEBAR_WIDTH_ICON = "3rem"
 const SIDEBAR_KEYBOARD_SHORTCUT = "b"
+const RANDOM_WIDTH = `${Math.floor(Math.random() * 40) + 50}%`;
 
 type SidebarContextProps = {
   state: "expanded" | "collapsed"
@@ -608,7 +596,7 @@ function SidebarMenuSkeleton({
 }) {
   // Random width between 50 to 90%.
   const width = React.useMemo(() => {
-    return `${Math.floor(Math.random() * 40) + 50}%`
+    return RANDOM_WIDTH
   }, [])
 
   return (
