@@ -40,29 +40,16 @@ function Terminal() {
         className="mt-10 rounded-xl border border-zinc-800 bg-[#0c121c]"
         style={{ maxHeight: "calc(100vh - 220px)" }}
       >
-        <Table className="w-full table-fixed">
+        <Table className="w-full">
           <TableHeader>
-            <TableRow className="border-zinc-800">
-              {/* TOKEN */}
-              <TableHead className="min-w-[220px]">TOKEN</TableHead>
-
-              {/* CA */}
-              <TableHead className="min-w-[140px]">CA</TableHead>
-
-              {/* VOLUME */}
-              <TableHead className="min-w-[140px]">VOLUME</TableHead>
-
-              {/* MARKET CAP */}
-              <TableHead className="min-w-[140px]">MARKET CAP</TableHead>
-
-              {/* PROGRESS */}
-              <TableHead className="min-w-[240px]">PROGRESS</TableHead>
-
-              {/* HOLDERS */}
-              <TableHead className="min-w-[140px] text-right"># HOLDERS</TableHead>
-
-              {/* TRADE */}
-              <TableHead className="min-w-[140px] text-right">TRADE</TableHead>
+            <TableRow className="border-zinc-800 ">
+              <TableHead className="col-span-2">TOKEN</TableHead>
+              <TableHead>CA</TableHead>
+              <TableHead>VOLUME</TableHead>
+              <TableHead>MARKET CAP</TableHead>
+              <TableHead>PROGRESS</TableHead>
+              <TableHead className="flex items-center justify-end"># HOLDERS</TableHead>
+              <TableHead className="text-right min-w-[140px]">TRADE</TableHead>
             </TableRow>
           </TableHeader>
         </Table>
@@ -112,7 +99,7 @@ function Terminal() {
                   </TableCell>
 
                   {/* CA */}
-                  <TableCell className="min-w-[140px]">
+                  <TableCell className="min-w-[180px]">
                     <div className="flex items-center">
                       <span className="text-blue-400 cursor-pointer font-mono w-[100px]">
                         {shortAddress(token.token, 4, 4)}
