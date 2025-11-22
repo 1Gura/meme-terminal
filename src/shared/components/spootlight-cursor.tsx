@@ -15,6 +15,10 @@ export function SpotlightCursor() {
     const targetSize = useRef(400);
     const targetBlur = useRef(120);
 
+    // ⭐ Новая переменная — яркость
+    const intensity = useRef(0.35);        // базовая яркость
+    const targetIntensity = useRef(0.35);  // целевая яркость
+
     const raf = useRef(0);
 
     useEffect(() => {
@@ -27,15 +31,13 @@ export function SpotlightCursor() {
         };
 
         const handleClick = () => {
-            targetSize.current = 480;
-            targetBlur.current = 150;
+            // ⭐ Усиливаем яркость
+            targetIntensity.current = 0.65;
 
+            // ⭐ Возвращаем обратно через 250ms
             setTimeout(() => {
-                targetSize.current = 400;
-                targetBlur.current = 120;
-            }, 220);
-
-            targetSize.current += 30;
+                targetIntensity.current = 0.35;
+            }, 250);
         };
 
         window.addEventListener("mousemove", handleMove);
@@ -49,11 +51,24 @@ export function SpotlightCursor() {
             size.current += (targetSize.current - size.current) * factor;
             blur.current += (targetBlur.current - blur.current) * factor;
 
+            // ⭐ Плавная интерполяция яркости
+            intensity.current += (targetIntensity.current - intensity.current) * factor;
+
             el.style.left = x.current - size.current / 2 + "px";
             el.style.top = y.current - size.current / 2 + "px";
             el.style.width = size.current + "px";
             el.style.height = size.current + "px";
             el.style.filter = `blur(${blur.current}px)`;
+
+            // ⭐ Подставляем обновлённую яркость
+            el.style.background = `
+                radial-gradient(
+                    circle,
+                    rgba(255,120,30,${intensity.current}),
+                    rgba(255,90,0,${intensity.current * 0.45}),
+                    transparent 70%
+                )
+            `;
 
             raf.current = requestAnimationFrame(animate);
         };
