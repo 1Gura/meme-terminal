@@ -15,6 +15,7 @@ import { ClientTime } from "@/shared/components/ClientTime";
 import { ClientNumber } from "@/shared/components/ClientNumber";
 import { shortAddress } from "@/shared/utils";
 import { CopyButton } from "@/shared/components/CopyButton";
+import { TradeButton } from "./TradeButton";
 
 function Terminal() {
   const { data, isLoading } = useTokensQuery("1");
@@ -44,7 +45,8 @@ function Terminal() {
               <TableHead>VOLUME</TableHead>
               <TableHead>MARKET CAP</TableHead>
               <TableHead>PROGRESS</TableHead>
-              <TableHead># HOLDERS</TableHead>
+              <TableHead className="flex items-center justify-end"># HOLDERS</TableHead>
+              <TableHead className="text-right min-w-[140px]">TRADE</TableHead>
             </TableRow>
           </TableHeader>
 
@@ -93,28 +95,25 @@ function Terminal() {
 
                 {/* CA */}
                 <TableCell className="min-w-[180px]">
-                  <div className="flex flex-col gap-1">
-                    {/* CA */}
-                    <div className="flex items-center gap-2">
-                      <span className="text-blue-400 cursor-pointer font-mono">
-                        {shortAddress(token.token, 4, 4)}
-                      </span>
+                  <div className="flex items-center">
+                    <span className="text-blue-400 cursor-pointer font-mono w-[100px]">
+                      {shortAddress(token.token, 4, 4)}
+                    </span>
 
-                      <CopyButton text={token.token} />
-                    </div>
+                    <CopyButton text={token.token} />
+                  </div>
 
-                    {/* Creator */}
-                    <div className="text-xs text-zinc-500 flex gap-1">
-                      <span>by</span>
-                      <span className="text-blue-400 font-mono">
-                        {shortAddress(token.creator, 4, 4)}
-                      </span>
-                    </div>
+                  {/* Creator */}
+                  <div className="text-xs text-zinc-500 flex gap-1">
+                    <span>by</span>
+                    <span className="text-blue-400 font-mono">
+                      {shortAddress(token.creator, 4, 4)}
+                    </span>
                   </div>
                 </TableCell>
 
                 {/* VOLUME */}
-                <TableCell className="col-span-2 min-w-[220px] whitespace-normal break-words">
+                <TableCell className="col-span-2 min-w-[140px] whitespace-normal break-words">
                   <div className="flex flex-col">
                     <span className="text-white">
                       <ClientNumber
@@ -133,15 +132,15 @@ function Terminal() {
                 </TableCell>
 
                 {/* MARKET CAP */}
-                <TableCell className="col-span-2 min-w-[220px] whitespace-normal break-words">
+                <TableCell className="col-span-2 min-w-[140px] whitespace-normal break-words">
                   <div className="flex flex-col">
                     <span className="text-white">${(token.marketCapUsd ?? 0).toFixed(2)}</span>
-                    <span className="text-xs text-zinc-500">${token.priceUsd?.toFixed(10)}</span>
+                    <span className="text-xs text-zinc-500">${token.priceUsd?.toFixed(4)}</span>
                   </div>
                 </TableCell>
 
                 {/* PROGRESS */}
-                <TableCell className="col-span-2 min-w-[220px] whitespace-normal break-words">
+                <TableCell className="col-span-2 min-w-[240px] whitespace-normal break-words">
                   <div className="w-full h-2 bg-zinc-700 rounded-full overflow-hidden">
                     <div
                       className="h-full bg-orange-400"
@@ -151,8 +150,12 @@ function Terminal() {
                 </TableCell>
 
                 {/* HOLDERS */}
-                <TableCell className="col-span-2 min-w-[220px] whitespace-normal break-words">
+                <TableCell className="flex justify-end col-span-2 min-w-[140px] whitespace-normal break-words">
                   {token.holders}
+                </TableCell>
+                {/* TRADE BUTTON */}
+                <TableCell className="text-right min-w-[140px]">
+                  <TradeButton />
                 </TableCell>
               </TableRow>
             ))}
