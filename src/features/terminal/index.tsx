@@ -39,7 +39,7 @@ function Terminal() {
       <div className="mt-10 rounded-xl overflow-hidden border border-zinc-800 bg-[#0c121c]">
         <Table>
           <TableHeader>
-            <TableRow className="border-zinc-800">
+            <TableRow className="border-zinc-800 ">
               <TableHead className="col-span-2">TOKEN</TableHead>
               <TableHead>CA</TableHead>
               <TableHead>VOLUME</TableHead>
