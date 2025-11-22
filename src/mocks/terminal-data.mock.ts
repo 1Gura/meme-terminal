@@ -1,0 +1,47 @@
+export const mockData = [
+    {
+        id: 1,
+        name: "sadness / sadness",
+        ca: "6vHU...pump",
+        creator: "J3gF...z4Bn",
+        volume: 26,
+        volumeBuy: 6,
+        volumeSell: 9,
+        marketCap: 3500,
+        price: 0.03521,
+        progress: 12,
+        holders: 100,
+        timestamp: "1m ago",
+        avatar: "/mocks/img/token.png"
+    },
+    {
+        id: 2,
+        name: "RCT / Really Cool Token",
+        ca: "32L7...5WiJ",
+        creator: "3rRE...efBY",
+        volume: 720,
+        volumeBuy: 4,
+        volumeSell: 4,
+        marketCap: 3600,
+        price: 0.03639,
+        progress: 40,
+        holders: 89,
+        timestamp: "1m ago",
+        avatar: "/mocks/img/token.png"
+    },
+    {
+        id: 3,
+        name: "COPE / COPE TERMINAL",
+        ca: "9Qh6...pump",
+        creator: "BMoi...LT86",
+        volume: 10000,
+        volumeBuy: 104,
+        volumeSell: 59,
+        marketCap: 8600,
+        price: 0.08602,
+        progress: 70,
+        holders: 1750,
+        timestamp: "1m ago",
+        avatar: "/mocks/img/token.png"
+    },
+];
