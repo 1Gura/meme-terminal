@@ -11,6 +11,8 @@ export function useTokensQuery(page: string) {
         page,
         version: STATIC_VERSION,
       }),
+    retry: 5,
+    retryDelay: (attempt) => Math.min(2 ** attempt * 500, 8000),
     staleTime: 5000,
   });
 }

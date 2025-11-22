@@ -48,7 +48,7 @@ export interface TokenItem {
   updatedAt: string;
   version: number;
   volumeSol: number;
-  volumeUsd: number;
+  voselumeUsd: number;
   website: string;
   x: string;
   _balanceSol: number;
