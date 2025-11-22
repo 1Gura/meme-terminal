@@ -25,7 +25,7 @@
       "@/shared/layouts/*": ["shared/layouts/*"],
       "@/shared/ui/*": ["shared/ui/*"],
       "@/shared/ui/components/*": ["shared/ui/components/*"],
-      "@/features/*": ["features/*"]
+      "@/features/*": ["src/features/*"]
     }
   },
   "include": [

@@ -14,7 +14,8 @@
   "aliases": {
     "api": "@/shared/api",
     "ws": "@/shared/ws",
-    "components": "@/shared/ui/components",
+    "components": "@/shared/components",
+    "hooks": "@/shared/hooks",
     "utils": "@/shared/utils"
   },
   "registries": {}
