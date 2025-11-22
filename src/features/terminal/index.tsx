@@ -48,6 +48,8 @@ function Terminal() {
                                     <div className="flex items-center gap-4">
                                         {token.avatar ? (
                                             <Image
+                                                width={48}
+                                                height={48}
                                                 src={token.avatar}
                                                 alt={token.name}
                                                 className="w-12 h-12 rounded-xl object-cover"
