@@ -1,4 +1,4 @@
-import {ReactNode, useState} from "react";
+import {ReactNode} from "react";
 import {
     Sidebar,
     SidebarContent,
@@ -22,11 +22,9 @@ export function LaunchpadLayout({ children }: { children: ReactNode }) {
 
     const isActive = (path: string) => router.pathname === path;
 
-    const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
-
     return (
         <SidebarProvider>
-            <MobileHeader onMenu={() => setIsMobileSidebarOpen(true)} />
+            <MobileHeader/>
             <div className="grid-background"/>
             <SpotlightCursor/>
             <div className="flex w-full h-screen bg-[#0a0f1a] text-zinc-100">
@@ -74,24 +72,6 @@ export function LaunchpadLayout({ children }: { children: ReactNode }) {
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
 
-                                {/* Portfolio */}
-                                {/*<SidebarMenuItem>*/}
-                                {/*    <SidebarMenuButton*/}
-                                {/*        asChild*/}
-                                {/*        isActive={isActive("/portfolio")}*/}
-                                {/*        className={*/}
-                                {/*            isActive("/portfolio")*/}
-                                {/*                ? "bg-gradient-to-r from-orange-400 to-orange-600 text-white shadow-lg shadow-orange-500/30"*/}
-                                {/*                : "hover:bg-orange-500/30 hover:text-white"*/}
-                                {/*        }*/}
-                                {/*    >*/}
-                                {/*        <Link href="/portfolio">*/}
-                                {/*            <Wallet />*/}
-                                {/*            <span>Portfolio</span>*/}
-                                {/*        </Link>*/}
-                                {/*    </SidebarMenuButton>*/}
-                                {/*</SidebarMenuItem>*/}
-
                                 {/* Create Token */}
                                 <SidebarMenuItem>
                                     <SidebarMenuButton
@@ -112,24 +92,6 @@ export function LaunchpadLayout({ children }: { children: ReactNode }) {
                                         </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
-
-                                {/* Rewards */}
-                                {/*<SidebarMenuItem>*/}
-                                {/*    <SidebarMenuButton*/}
-                                {/*        asChild*/}
-                                {/*        isActive={isActive("/rewards")}*/}
-                                {/*        className={*/}
-                                {/*            isActive("/rewards")*/}
-                                {/*                ? "bg-gradient-to-r from-orange-400 to-orange-600 text-white shadow-lg shadow-orange-500/30"*/}
-                                {/*                : "hover:bg-orange-500/30 hover:text-white"*/}
-                                {/*        }*/}
-                                {/*    >*/}
-                                {/*        <Link href="/rewards">*/}
-                                {/*            <Gift />*/}
-                                {/*            <span>Rewards</span>*/}
-                                {/*        </Link>*/}
-                                {/*    </SidebarMenuButton>*/}
-                                {/*</SidebarMenuItem>*/}
 
                                 {/* Profile */}
                                 <SidebarMenuItem>
