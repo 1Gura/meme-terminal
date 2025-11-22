@@ -25,17 +25,16 @@ export function LaunchpadLayout({ children }: { children: ReactNode }) {
 
     return (
         <SidebarProvider>
-            <SpotlightCursor />
+            <div className="grid-background"/>
+            <SpotlightCursor/>
             <div className="flex w-full h-screen bg-[#0a0f1a] text-zinc-100">
-
                 <Sidebar className="bg-[#111827]">
-
                     {/* HEADER */}
                     <SidebarGroup>
                         <div className="flex items-center gap-3 px-4 py-4">
                             <div className="bg-gradient-to-br from-orange-400 to-orange-600 p-3 rounded-xl shadow-lg">
                                 <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff">
-                                    <path d="M12 2L2 7l10 5 10-5-10-5zm0 8L2 15l10 5 10-5-10-5z" />
+                                    <path d="M12 2L2 7l10 5 10-5-10-5zm0 8L2 15l10 5 10-5-10-5z"/>
                                 </svg>
                             </div>
 
@@ -46,7 +45,7 @@ export function LaunchpadLayout({ children }: { children: ReactNode }) {
                         </div>
                     </SidebarGroup>
 
-                    <SidebarSeparator className="my-2 opacity-10" />
+                    <SidebarSeparator className="my-2 opacity-10"/>
 
                     <SidebarContent>
                         <SidebarGroup>
@@ -64,10 +63,10 @@ export function LaunchpadLayout({ children }: { children: ReactNode }) {
                                         }
                                     >
                                         <Link href="/terminal">
-                                            <LayoutDashboard />
+                                            <LayoutDashboard/>
                                             <span>Terminal</span>
                                             {isActive("/terminal") && (
-                                                <span className="ml-auto w-2 h-2 bg-orange-200 rounded-full" />
+                                                <span className="ml-auto w-2 h-2 bg-orange-200 rounded-full"/>
                                             )}
                                         </Link>
                                     </SidebarMenuButton>
@@ -103,10 +102,10 @@ export function LaunchpadLayout({ children }: { children: ReactNode }) {
                                         }
                                     >
                                         <Link href="/create-token">
-                                            <PlusCircle />
+                                            <PlusCircle/>
                                             <span>Create Meme</span>
                                             {isActive("/create-token") && (
-                                                <span className="ml-auto w-2 h-2 bg-orange-200 rounded-full" />
+                                                <span className="ml-auto w-2 h-2 bg-orange-200 rounded-full"/>
                                             )}
                                         </Link>
                                     </SidebarMenuButton>
@@ -142,10 +141,10 @@ export function LaunchpadLayout({ children }: { children: ReactNode }) {
                                         }
                                     >
                                         <Link href="/profile">
-                                            <User />
+                                            <User/>
                                             <span>Profile</span>
                                             {isActive("/profile") && (
-                                                <span className="ml-auto w-2 h-2 bg-orange-200 rounded-full" />
+                                                <span className="ml-auto w-2 h-2 bg-orange-200 rounded-full"/>
                                             )}
                                         </Link>
                                     </SidebarMenuButton>
@@ -155,7 +154,7 @@ export function LaunchpadLayout({ children }: { children: ReactNode }) {
                         </SidebarGroup>
                     </SidebarContent>
                     {/* BOTTOM AUTH SECTION */}
-                    <SidebarSeparator className="my-4 opacity-10 mt-auto" />
+                    <SidebarSeparator className="my-4 opacity-10 mt-auto"/>
 
                     <SidebarGroup className="px-4 pb-6">
                         <SidebarMenu>
@@ -171,7 +170,7 @@ export function LaunchpadLayout({ children }: { children: ReactNode }) {
                 "
                                 >
                                     <Link href="/auth/sign-in">
-                                        <User />
+                                        <User/>
                                         <span>Sign In</span>
                                     </Link>
                                 </SidebarMenuButton>
@@ -189,7 +188,7 @@ export function LaunchpadLayout({ children }: { children: ReactNode }) {
                 "
                                 >
                                     <Link href="/auth/sign-up">
-                                        <PlusCircle />
+                                        <PlusCircle/>
                                         <span>Sign Up</span>
                                     </Link>
                                 </SidebarMenuButton>
@@ -204,7 +203,6 @@ export function LaunchpadLayout({ children }: { children: ReactNode }) {
                 <main className="w-full flex-1 overflow-y-auto px-8 py-6 card">
                     <div className='content'>
                         {children}
-
                     </div>
                 </main>
 
