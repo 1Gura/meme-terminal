@@ -40,34 +40,32 @@ function Terminal() {
         className="mt-10 rounded-xl border border-zinc-800 bg-[#0c121c]"
         style={{ maxHeight: "calc(100vh - 220px)" }}
       >
-        <Table className="w-full table-fixed">
-          <TableHeader>
-            <TableRow className="border-zinc-800">
-              {/* TOKEN */}
-              <TableHead className="min-w-[220px]">TOKEN</TableHead>
-
-              {/* CA */}
-              <TableHead className="min-w-[140px]">CA</TableHead>
-
-              {/* VOLUME */}
-              <TableHead className="min-w-[140px]">VOLUME</TableHead>
-
-              {/* MARKET CAP */}
-              <TableHead className="min-w-[140px]">MARKET CAP</TableHead>
-
-              {/* PROGRESS */}
-              <TableHead className="min-w-[240px]">PROGRESS</TableHead>
-
-              {/* HOLDERS */}
-              <TableHead className="min-w-[140px] text-right"># HOLDERS</TableHead>
-
-              {/* TRADE */}
-              <TableHead className="min-w-[140px] text-right">TRADE</TableHead>
-            </TableRow>
-          </TableHeader>
-        </Table>
-        <div className="overflow-y-auto" style={{ height: "calc(100vh - 260px)" }}>
+        <div className="overflow-y-auto" style={{ height: "calc(100vh - 220px)" }}>
           <Table className="w-full">
+            <TableHeader>
+              <TableRow className="border-zinc-800">
+                {/* TOKEN */}
+                <TableHead className="min-w-[220px]">TOKEN</TableHead>
+
+                {/* CA */}
+                <TableHead className="min-w-[140px]">CA</TableHead>
+
+                {/* VOLUME */}
+                <TableHead className="min-w-[140px]">VOLUME</TableHead>
+
+                {/* MARKET CAP */}
+                <TableHead className="min-w-[140px]">MARKET CAP</TableHead>
+
+                {/* PROGRESS */}
+                <TableHead className="min-w-[240px]">PROGRESS</TableHead>
+
+                {/* HOLDERS */}
+                <TableHead className="min-w-[140px] text-right"># HOLDERS</TableHead>
+
+                {/* TRADE */}
+                <TableHead className="min-w-[140px] text-right">TRADE</TableHead>
+              </TableRow>
+            </TableHeader>
             <TableBody>
               {/*{(*/}
               {/*    <TableRow>*/}
