@@ -127,7 +127,7 @@
 .fade-page {
   opacity: 0;
   transform: translateY(10px);
-  animation: fade-page-in 0.35s ease forwards;
+  animation: fade-page-in 0.5s ease forwards;
 }
 
 @keyframes fade-page-in {
