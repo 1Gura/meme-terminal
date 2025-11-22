@@ -202,8 +202,12 @@ export function LaunchpadLayout({ children }: { children: ReactNode }) {
                 </Sidebar>
 
                 {/* MAIN CONTENT */}
-                <main className="w-full flex-1 overflow-y-auto px-8 py-6 card pt-[80px] md:pt-6">
-                    <div className='content'>
+                <main
+                    className="w-full flex-1 overflow-y-auto px-8 py-6 card pt-[80px] md:pt-6 fade-page-enter fade-page-enter-active">
+                    <div
+                        key={router.asPath}
+                        className="fade-page"
+                    >
                         {children}
                     </div>
                 </main>

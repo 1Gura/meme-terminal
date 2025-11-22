@@ -123,3 +123,21 @@
   background-size: 80px 80px;
   pointer-events: none;
 }
+
+.fade-page {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fade-page-in 0.35s ease forwards;
+}
+
+@keyframes fade-page-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
