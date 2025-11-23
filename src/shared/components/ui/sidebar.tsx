@@ -463,8 +463,9 @@ const sidebarMenuButtonVariants = cva(
     "focus-visible:ring-2 active:bg-orange-500/30 active:text-white " +
     "disabled:pointer-events-none disabled:opacity-50 " +
     "group-has-data-[sidebar=menu-action]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 " +
+    "data-[active=true]:shadow-[0_0_12px_rgba(255,149,0,0.35)] " +
     "data-[active=true]:bg-gradient-to-r data-[active=true]:from-orange-400 data-[active=true]:to-orange-600 " +
-    "data-[active=true]:text-white data-[active=true]:shadow-[0_0_0_1px_hsl(var(--sidebar-accent))] " +
+    "data-[active=true]:text-white " +
     "group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! " +
     "[&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0",
   {
