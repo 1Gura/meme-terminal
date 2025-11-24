@@ -1,6 +1,6 @@
 import { TokenItem } from "@/shared/api/token/token-service";
 
-export const mockData: TokenItem[] = [
+export const mockDataRaw: TokenItem[] = [
   {
     buys: 3,
     configAddress: null,
@@ -1025,3 +1025,12 @@ export const mockData: TokenItem[] = [
     _id: "mock-10",
   },
 ];
+
+function uidFromToken(token: string) {
+  return "mock-" + token.slice(0, 6) + "-" + Math.random().toString(36).slice(2, 8);
+}
+
+export const mockData: TokenItem[] = mockDataRaw.map((item) => ({
+  ...item,
+  _id: uidFromToken(item.token), // ← генерируем уникальный ID
+}));

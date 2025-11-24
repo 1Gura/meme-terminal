@@ -1,4 +1,20 @@
-export function connect() {
+import { PumpfunTokenEvent } from "@/shared/ws/ws.types";
+
+let alreadyStarted = false;
+
+interface PushMessage {
+  push: {
+    channel: string;
+    pub: {
+      data: PumpfunTokenEvent;
+    };
+  };
+}
+
+export function connect(onPush: (ev: PumpfunTokenEvent) => void) {
+  if (alreadyStarted) return;
+  alreadyStarted = true;
+
   let socket: WebSocket | null = null;
   let reconnectTimer: any = null;
 
@@ -6,9 +22,6 @@ export function connect() {
     socket = new WebSocket("wss://launch.meme/connection/websocket");
 
     socket.onopen = () => {
-      console.log("🟢 WS open");
-
-      // === CONNECT === //
       socket!.send(
         JSON.stringify({
           connect: {
@@ -16,71 +29,45 @@ export function connect() {
               "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmcm9udCIsImlhdCI6MTc1MTkwMzI5Mn0.4ANk5jn-BaOq9K3rfZnoW3D-vvSTPMN2CeDFElKN0HY",
             name: "js",
           },
-          id: 1,
+          id: 3,
         })
       );
 
-      // === SUBSCRIBE TO PUMPFUN CHANNEL === //
       socket!.send(
         JSON.stringify({
           subscribe: {
             channel: "pumpfun-mintTokens",
           },
-          id: 2,
+          id: 4,
         })
       );
     };
 
     socket.onmessage = (event) => {
-      // raw message string
-      const raw = event.data;
+      if (typeof event.data !== "string") return;
 
-      if (typeof raw !== "string") {
-        console.warn("Non-text WS message, skipping:", raw);
-        return;
-      }
+      const parts = event.data.split("\n").filter(Boolean);
 
-      // Иногда Centrifugo добавляет многоканальные батчи через "\n"
-      const messages = raw.split("\n").filter(Boolean);
-
-      for (const msg of messages) {
+      for (const part of parts) {
         try {
-          const json = JSON.parse(msg);
+          const msg = JSON.parse(part) as PushMessage;
 
-          // ------------------------------
-          // 🔥 Обработка PUSH-сообщений
-          // ------------------------------
-          if (json.push) {
-            const channel = json.push.channel;
-            const data = json.push.data?.pub?.data;
+          if (!msg.push) continue;
 
-            console.log("🔥 PUSH EVENT:", channel, data);
-            continue;
-          }
+          const data = msg.push.pub?.data;
+          if (!data) continue;
 
-          // ------------------------------
-          // 📣 Публикации (обычные)
-          // ------------------------------
-          if (json.pub) {
-            console.log("📣 PUBLICATION:", json.pub);
-            continue;
-          }
+          console.log("🔥 PUSH EVENT:", data);
 
-          console.log("📨 MESSAGE:", json);
-        } catch (err) {
-          console.warn("❌ Failed to parse WS message:", err);
-          console.log("Message:", msg);
+          // 👉 Передаем данные в компонент
+          onPush(data);
+        } catch {
+          // ignore
         }
       }
     };
 
-    socket.onerror = (err) => {
-      console.error("🔴 WS error:", err);
-    };
-
     socket.onclose = () => {
-      console.log("🟠 WS closed — reconnecting in 1s…");
-
       reconnectTimer = setTimeout(() => start(), 1000);
     };
   }

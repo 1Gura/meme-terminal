@@ -20,6 +20,8 @@ import { useEffect, useState } from "react";
 import { TradeRowSkeleton } from "./TradeRowSkeleton";
 
 function Terminal() {
+  const [events, setEvents] = useState([]);
+
   const { data, isLoading } = useTokensQuery("1");
 
   // пока используем мок
