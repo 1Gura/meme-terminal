@@ -16,9 +16,6 @@ import { PumpfunTokenEvent } from "@/shared/ws/ws.types";
 import { connect } from "@/shared/ws/ws.native";
 import { SafeImage } from "@/shared/components/SafeImage";
 import { TinyPrice } from "@/shared/components/FormatTinyNumber";
-import { InfiniteTicker } from "@/shared/components/InfiniteTicker";
-import { mockData } from "@/mocks/terminal-data.mock";
-import { TokenCard } from "@/shared/components/TokenCard";
 
 function Terminal() {
   const [tokens, setTokens] = useState<PumpfunTokenEvent[]>([]);
@@ -65,11 +62,11 @@ function Terminal() {
         </button>
       </div>
 
-      <InfiniteTicker speed={50} className="my-6">
-        {mockData.map((token) => (
-          <TokenCard key={token._id} token={token} />
-        ))}
-      </InfiniteTicker>
+      {/*<InfiniteTicker speed={50} className="my-6">*/}
+      {/*  {mockData.map((token) => (*/}
+      {/*    <TokenCard key={token._id} token={token} />*/}
+      {/*  ))}*/}
+      {/*</InfiniteTicker>*/}
 
       {/* TABLE */}
       <div
