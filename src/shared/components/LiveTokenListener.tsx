@@ -17,11 +17,15 @@ export function LiveTokensListener() {
   const [events, setEvents] = useState<LiveTokenEvent[]>([]);
 
   useEffect(() => {
-    const sub = wsService.subscribe("meteora-tokenUpdates", (msg) => {
-      setEvents((prev) => [msg, ...prev].slice(0, 10));
+    const ws = wsService; // <-- инстанс, а не функция
+
+    const sub = ws.subscribe("pumpfun-mintTokens", (data) => {
+      console.log("WS DATA:", data);
     });
 
-    return () => sub.unsubscribe();
+    return () => {
+      sub?.unsubscribe();
+    };
   }, []);
 
   const isEmpty = events.length === 0;
