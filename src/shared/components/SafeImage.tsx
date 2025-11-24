@@ -1,5 +1,18 @@
+// shared/components/SafeImage.tsx
+"use client";
+
 import Image from "next/image";
 import { useState } from "react";
+
+const isExternal = (src: string | null) => {
+  if (!src) return false;
+  try {
+    const url = new URL(src);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch {
+    return false;
+  }
+};
 
 export function SafeImage({
   src,
@@ -14,38 +27,55 @@ export function SafeImage({
   height?: number;
   className?: string;
 }) {
-  const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
-  // Надёжная проверка: если src явно сломан или был error — НЕ рендерим <Image />
-  const canRenderImage =
-    !!src &&
-    !error &&
-    (src.startsWith("http://") || src.startsWith("https://") || src.startsWith("/"));
+  const showPlaceholder = !src || error;
 
   return (
-    <div
-      style={{ width, height }}
-      className={`relative overflow-hidden bg-[#1a1f2e] ${className}`}
-      aria-label={alt}
-    >
-      {!loaded && <div className="absolute inset-0 rounded-xl bg-[#1a1f2e]" aria-hidden="true" />}
+    <div style={{ width, height }} className={`relative overflow-hidden bg-[#1a1f2e] ${className}`}>
+      {!loaded && <div className="absolute inset-0 bg-[#1a1f2e] rounded-xl animate-pulse" />}
 
-      {canRenderImage && (
-        <Image
-          src={src!}
-          alt={alt}
-          width={width}
-          height={height}
-          className={`object-cover ${className} ${loaded ? "opacity-100" : "opacity-0"}`}
-          onLoad={() => setLoaded(true)}
-          onError={(e) => {
-            console.warn("SafeImage: image failed → using placeholder instead:", src);
+      {showPlaceholder && <div className="absolute inset-0 bg-[#1a1f2e] rounded-xl" />}
+
+      {!showPlaceholder &&
+        (() => {
+          try {
+            if (!isExternal(src)) {
+              return (
+                <Image
+                  src={src!}
+                  alt={alt}
+                  width={width}
+                  height={height}
+                  className={`object-cover rounded-xl transition-opacity ${
+                    loaded ? "opacity-100" : "opacity-0"
+                  }`}
+                  unoptimized
+                  onLoad={() => setLoaded(true)}
+                  onError={() => setError(true)}
+                />
+              );
+            }
+
+            return (
+              <img
+                src={src!}
+                alt={alt}
+                width={width}
+                height={height}
+                className={`object-cover rounded-xl transition-opacity ${
+                  loaded ? "opacity-100" : "opacity-0"
+                }`}
+                onLoad={() => setLoaded(true)}
+                onError={() => setError(true)}
+              />
+            );
+          } catch {
             setError(true);
-            setLoaded(false);
-          }}
-        />
-      )}
+            return null;
+          }
+        })()}
     </div>
   );
 }
