@@ -16,6 +16,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { MobileHeader } from "@/shared/components/MobileHeader";
 import SpotlightCursor from "@/shared/components/SpootlightCursor";
+import { LiveTokensListener } from "@/shared/components/LiveTokenListener";
 
 export function LaunchpadLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
@@ -116,6 +117,12 @@ export function LaunchpadLayout({ children }: { children: ReactNode }) {
             </SidebarGroup>
           </SidebarContent>
           {/* BOTTOM AUTH SECTION */}
+          <SidebarSeparator className="my-4 opacity-10 mt-auto" />
+
+          <div className="px-6 py-6">
+            <LiveTokensListener />
+          </div>
+
           <SidebarSeparator className="my-4 opacity-10 mt-auto" />
 
           <SidebarGroup className="px-4 pb-6">
