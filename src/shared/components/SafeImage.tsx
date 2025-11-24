@@ -1,4 +1,3 @@
-// shared/components/SafeImage.tsx
 "use client";
 
 import Image from "next/image";
@@ -19,7 +18,7 @@ export function SafeImage({
   alt,
   width = 48,
   height = 48,
-  className = "rounded-xl",
+  className = "",
 }: {
   src: string | null;
   alt: string;
@@ -33,49 +32,50 @@ export function SafeImage({
   const showPlaceholder = !src || error;
 
   return (
-    <div style={{ width, height }} className={`relative overflow-hidden bg-[#1a1f2e] ${className}`}>
+    <div
+      style={{ width, height }}
+      className={`relative overflow-hidden bg-[#1a1f2e] rounded-xl ${className}`}
+    >
+      {/* Плейсхолдер пока грузится */}
       {!loaded && <div className="absolute inset-0 bg-[#1a1f2e] rounded-xl animate-pulse" />}
 
+      {/* Плейсхолдер при ошибке */}
       {showPlaceholder && <div className="absolute inset-0 bg-[#1a1f2e] rounded-xl" />}
 
-      {!showPlaceholder &&
-        (() => {
-          try {
-            if (!isExternal(src)) {
-              return (
-                <Image
-                  src={src!}
-                  alt={alt}
-                  width={width}
-                  height={height}
-                  className={`object-cover rounded-xl transition-opacity ${
-                    loaded ? "opacity-100" : "opacity-0"
-                  }`}
-                  unoptimized
-                  onLoad={() => setLoaded(true)}
-                  onError={() => setError(true)}
-                />
-              );
-            }
-
-            return (
-              <img
-                src={src!}
-                alt={alt}
-                width={width}
-                height={height}
-                className={`object-cover rounded-xl transition-opacity ${
-                  loaded ? "opacity-100" : "opacity-0"
-                }`}
-                onLoad={() => setLoaded(true)}
-                onError={() => setError(true)}
-              />
-            );
-          } catch {
-            setError(true);
-            return null;
-          }
-        })()}
+      {!showPlaceholder && (
+        <>
+          {isExternal(src) ? (
+            <img
+              src={src!}
+              alt={alt}
+              className={`
+                absolute inset-0 w-full h-full 
+                object-cover object-center
+                transition-opacity duration-300
+                ${loaded ? "opacity-100" : "opacity-0"}
+              `}
+              onLoad={() => setLoaded(true)}
+              onError={() => setError(true)}
+            />
+          ) : (
+            <Image
+              src={src!}
+              alt={alt}
+              width={width}
+              height={height}
+              unoptimized
+              className={`
+                absolute inset-0 w-full h-full 
+                object-cover object-center
+                transition-opacity duration-300
+                ${loaded ? "opacity-100" : "opacity-0"}
+              `}
+              onLoad={() => setLoaded(true)}
+              onError={() => setError(true)}
+            />
+          )}
+        </>
+      )}
     </div>
   );
 }
