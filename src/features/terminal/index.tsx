@@ -8,7 +8,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/shared/components/ui/table";
-import Image from "next/image";
 import { ClientTime } from "@/shared/components/ClientTime";
 import { ClientNumber } from "@/shared/components/ClientNumber";
 import { shortAddress } from "@/shared/utils";
@@ -17,6 +16,7 @@ import { TradeButton } from "./TradeButton";
 import { useEffect, useState } from "react";
 import { PumpfunTokenEvent } from "@/shared/ws/ws.types";
 import { connect } from "@/shared/ws/ws.native";
+import { SafeImage } from "@/shared/components/SafeImage";
 
 function Terminal() {
   const [tokens, setTokens] = useState<PumpfunTokenEvent[]>([]);
@@ -92,19 +92,21 @@ function Terminal() {
                   <TableCell className="min-w-[220px] whitespace-normal break-words">
                     <div className="flex items-center gap-4">
                       {token.photo ? (
-                        <Image
-                          width={48}
-                          height={48}
-                          src={token.photo}
-                          alt={token.name}
-                          className="w-12 h-12 rounded-xl object-cover"
-                        />
+                        <div className="w-12 h-12 flex-shrink-0 rounded-xl overflow-hidden bg-[#1f2937]">
+                          <SafeImage
+                            width={48}
+                            height={48}
+                            src={token.metadataUri}
+                            alt={token.name}
+                            className="w-12 h-12 rounded-xl object-cover"
+                          />
+                        </div>
                       ) : (
                         <div className="w-12 h-12 rounded-xl bg-zinc-700" />
                       )}
 
                       <div>
-                        <div className="font-medium text-white">{token.name}</div>
+                        <div className="font-medium text-white truncate block">{`${token.symbol} / ${token.name}`}</div>
                         <div className="text-xs text-zinc-500">
                           <ClientTime date={token.mint_time.toString()} />
                         </div>

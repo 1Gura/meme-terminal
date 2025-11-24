@@ -31,6 +31,18 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "**.launch.meme",
       },
+      {
+        protocol: "https",
+        hostname: "pbs.twimg.com",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.oneclick.bond",
+      },
+      {
+        protocol: "https",
+        hostname: "ipfs.io",
+      },
     ],
   },
   reactStrictMode: true,

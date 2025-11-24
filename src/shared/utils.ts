@@ -10,3 +10,10 @@ export function shortAddress(addr: string, start = 4, end = 4) {
   if (addr.length <= start + end) return addr;
   return `${addr.slice(0, start)}...${addr.slice(-end)}`;
 }
+
+export function safeImage(src?: string | null) {
+  if (!src || src === "null" || src === "/images/empty.gif") {
+    return "/mocks/img/token.png";
+  }
+  return src;
+}
