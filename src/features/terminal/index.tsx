@@ -179,11 +179,19 @@ function Terminal() {
 
                       {/* PROGRESS */}
                       <TableCell className="col-span-2 min-w-[240px] whitespace-normal break-words">
-                        <div className="w-full h-2 bg-zinc-700 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-orange-400"
-                            style={{ width: `${(token.progress ?? 0) * 100}%` }}
-                          />
+                        <div className="flex flex-col gap-1.5">
+                          {/* Полоса прогресса */}
+                          <div className="w-full h-2 bg-zinc-700 rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-orange-400 transition-all"
+                              style={{ width: `${(token.progress ?? 0) * 100}%` }}
+                            />
+                          </div>
+
+                          {/* Текстовое значение */}
+                          <div className="text-[10px] text-muted-foreground">
+                            {Math.round((token.progress ?? 0) * 100)}%
+                          </div>
                         </div>
                       </TableCell>
 
