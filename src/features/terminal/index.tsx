@@ -24,10 +24,27 @@ function Terminal() {
   useEffect(() => {
     const ws = connect(
       "wss://launch.meme/connection/websocket",
-      ["pumpfun-mintTokens"],
+      ["pumpfun-mintTokens", "pumpfun-tokenUpdates"],
       (channel, data) => {
-        console.log("EVENT from", channel, data);
-        setTokens((prev) => [data, ...prev].slice(0, 50));
+        // Новые токены — добавляем
+        if (channel === "pumpfun-mintTokens") {
+          setTokens((prev) => {
+            // если уже есть — не добавляем повтор
+            if (prev.some((t) => t.token === data.token)) return prev;
+            return [data, ...prev].slice(0, 50);
+          });
+        }
+
+        // Обновления существующих токенов
+        if (channel === "pumpfun-tokenUpdates") {
+          setTokens((prev) =>
+            prev.map((t) =>
+              t.token === data.token
+                ? { ...t, ...data } // обновляем только существующий
+                : t
+            )
+          );
+        }
       }
     );
 

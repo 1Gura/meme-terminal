@@ -58,6 +58,7 @@ export function connect(
 
       try {
         const msg = JSON.parse(event.data) as PushMessage;
+        debugger;
 
         if (!msg.push) return;
 

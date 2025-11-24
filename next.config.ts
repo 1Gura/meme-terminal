@@ -15,6 +15,22 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "edge.uxento.io",
       },
+      {
+        protocol: "https",
+        hostname: "pbs.twimg.com",
+      },
+      {
+        protocol: "https",
+        hostname: "ipfs.io",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.launch.meme",
+      },
+      {
+        protocol: "https",
+        hostname: "**.launch.meme",
+      },
     ],
   },
   reactStrictMode: true,
