@@ -8,13 +8,14 @@ import {
 } from "@/shared/components/ui/table";
 import { ClientTime } from "@/shared/components/ClientTime";
 import { ClientNumber } from "@/shared/components/ClientNumber";
-import { shortAddress } from "@/shared/utils";
+import { formatTinyUsd, shortAddress } from "@/shared/utils";
 import { CopyButton } from "@/shared/components/CopyButton";
 import { TradeButton } from "./TradeButton";
 import { useEffect, useState } from "react";
 import { PumpfunTokenEvent } from "@/shared/ws/ws.types";
 import { connect } from "@/shared/ws/ws.native";
 import { SafeImage } from "@/shared/components/SafeImage";
+import { TinyPrice } from "@/shared/components/FormatTinyNumber";
 
 function Terminal() {
   const [tokens, setTokens] = useState<PumpfunTokenEvent[]>([]);
@@ -152,7 +153,7 @@ function Terminal() {
                   <TableCell className="min-w-[140px]">
                     <div className="flex flex-col">
                       <span className="text-white">${token.marketCapUsd?.toFixed(2)}</span>
-                      <span className="text-xs text-zinc-500">${token.priceUsd?.toFixed(4)}</span>
+                      <TinyPrice className="text-xs text-zinc-500" value={token.priceUsd} />
                     </div>
                   </TableCell>
 

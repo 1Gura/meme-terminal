@@ -1,19 +1,30 @@
-"use client";
-
-import { useEffect, useState } from "react";
+interface ClientNumberProps {
+  value: number | string | null;
+  currency?: string; // выводим перед числом
+  options?: {
+    minimumFractionDigits?: number;
+    maximumFractionDigits?: number;
+  };
+  className?: string;
+}
 
 export function ClientNumber({
   value,
-  options = {},
-}: {
-  value: number;
-  options?: Intl.NumberFormatOptions;
-}) {
-  const [formatted, setFormatted] = useState<string>("");
+  currency = "$",
+  options = {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  },
+  className = "",
+}: ClientNumberProps) {
+  if (value == null || isNaN(Number(value))) return <>0</>;
 
-  useEffect(() => {
-    setFormatted(new Intl.NumberFormat("en-US", options).format(value));
-  }, [value, options]);
+  const formatted = new Intl.NumberFormat("en-US", options).format(Number(value));
 
-  return <>{formatted}</>;
+  return (
+    <span className={className}>
+      {currency}
+      {formatted}
+    </span>
+  );
 }
