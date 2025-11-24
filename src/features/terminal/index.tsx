@@ -8,7 +8,7 @@ import {
 } from "@/shared/components/ui/table";
 import { ClientTime } from "@/shared/components/ClientTime";
 import { ClientNumber } from "@/shared/components/ClientNumber";
-import { formatTinyUsd, shortAddress } from "@/shared/utils";
+import { shortAddress } from "@/shared/utils";
 import { CopyButton } from "@/shared/components/CopyButton";
 import { TradeButton } from "./TradeButton";
 import { useEffect, useState } from "react";
@@ -16,6 +16,9 @@ import { PumpfunTokenEvent } from "@/shared/ws/ws.types";
 import { connect } from "@/shared/ws/ws.native";
 import { SafeImage } from "@/shared/components/SafeImage";
 import { TinyPrice } from "@/shared/components/FormatTinyNumber";
+import { InfiniteTicker } from "@/shared/components/InfiniteTicker";
+import { mockData } from "@/mocks/terminal-data.mock";
+import { TokenCard } from "@/shared/components/TokenCard";
 
 function Terminal() {
   const [tokens, setTokens] = useState<PumpfunTokenEvent[]>([]);
@@ -61,6 +64,12 @@ function Terminal() {
           🔍
         </button>
       </div>
+
+      <InfiniteTicker speed={50} className="my-6">
+        {mockData.map((token) => (
+          <TokenCard key={token._id} token={token} />
+        ))}
+      </InfiniteTicker>
 
       {/* TABLE */}
       <div
