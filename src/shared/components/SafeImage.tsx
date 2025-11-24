@@ -1,47 +1,12 @@
-// shared/components/SafeImage.tsx
-"use client";
-
 import Image from "next/image";
 import { useState } from "react";
-
-function isValidUrl(url: string | null): boolean {
-  if (!url) return false;
-  try {
-    // Абсолютные ссылки
-    if (url.startsWith("http://") || url.startsWith("https://")) {
-      new URL(url);
-      return true;
-    }
-    // Локальные
-    if (url.startsWith("/")) return true;
-
-    return false;
-  } catch {
-    return false;
-  }
-}
-
-// Проверяем разрешённые хосты
-function isAllowedHost(url: string) {
-  try {
-    const u = new URL(url);
-    return ["localhost", "yourdomain.com"].includes(u.hostname);
-  } catch {
-    return false;
-  }
-}
-
-// === ПУСТОЙ ПЛЕЙСХОЛДЕР ===
-function Placeholder({ width, height, className }: any) {
-  return <div className={`rounded-xl bg-zinc-800 ${className || ""}`} style={{ width, height }} />;
-}
 
 export function SafeImage({
   src,
   alt,
   width = 48,
   height = 48,
-  className,
+  className = "rounded-xl",
 }: {
   src: string | null;
   alt: string;
@@ -49,35 +14,38 @@ export function SafeImage({
   height?: number;
   className?: string;
 }) {
-  const valid = isValidUrl(src);
+  const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
 
-  // ❗ Если ссылка невалидна или произошла ошибка — показываем пустую ячейку
-  if (!valid || error) {
-    return <Placeholder width={width} height={height} className={className} />;
-  }
-
-  if (src!.startsWith("http") && !isAllowedHost(src!)) {
-    return (
-      <img
-        src={src!}
-        alt={alt}
-        width={width}
-        height={height}
-        className={className}
-        onError={() => setError(true)}
-      />
-    );
-  }
+  // Надёжная проверка: если src явно сломан или был error — НЕ рендерим <Image />
+  const canRenderImage =
+    !!src &&
+    !error &&
+    (src.startsWith("http://") || src.startsWith("https://") || src.startsWith("/"));
 
   return (
-    <Image
-      src={src!}
-      alt={alt}
-      width={width}
-      height={height}
-      className={className}
-      onError={() => setError(true)}
-    />
+    <div
+      style={{ width, height }}
+      className={`relative overflow-hidden bg-[#1a1f2e] ${className}`}
+      aria-label={alt}
+    >
+      {!loaded && <div className="absolute inset-0 rounded-xl bg-[#1a1f2e]" aria-hidden="true" />}
+
+      {canRenderImage && (
+        <Image
+          src={src!}
+          alt={alt}
+          width={width}
+          height={height}
+          className={`object-cover ${className} ${loaded ? "opacity-100" : "opacity-0"}`}
+          onLoad={() => setLoaded(true)}
+          onError={(e) => {
+            console.warn("SafeImage: image failed → using placeholder instead:", src);
+            setError(true);
+            setLoaded(false);
+          }}
+        />
+      )}
+    </div>
   );
 }

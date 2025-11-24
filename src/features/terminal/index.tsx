@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Table,
   TableBody,
@@ -96,7 +94,7 @@ function Terminal() {
                           <SafeImage
                             width={48}
                             height={48}
-                            src={token.metadataUri}
+                            src={token.photo}
                             alt={token.name}
                             className="w-12 h-12 rounded-xl object-cover"
                           />
