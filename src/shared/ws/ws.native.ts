@@ -1,8 +1,8 @@
-import { PumpfunTokenEvent } from "@/shared/ws/ws.types";
+// ws-connect.ts
+import { WS_TOKEN } from "./ws.config";
+import { PumpfunTokenEvent } from "./ws.types";
 
-let alreadyStarted = false;
-
-interface PushMessage {
+export interface PushMessage {
   push: {
     channel: string;
     pub: {
@@ -11,63 +11,73 @@ interface PushMessage {
   };
 }
 
-export function connect(onPush: (ev: PumpfunTokenEvent) => void) {
+let alreadyStarted = false;
+
+export function connect(
+  url: string,
+  channels: string[],
+  onPush: (channel: string, data: PumpfunTokenEvent) => void
+) {
   if (alreadyStarted) return;
   alreadyStarted = true;
 
   let socket: WebSocket | null = null;
-  let reconnectTimer: any = null;
+  let reconnectTimer: NodeJS.Timeout | null = null;
 
   function start() {
-    socket = new WebSocket("wss://launch.meme/connection/websocket");
+    socket = new WebSocket(url);
 
     socket.onopen = () => {
+      console.log("🟢 WS open:", url);
+
+      // CONNECT handshake
       socket!.send(
         JSON.stringify({
           connect: {
-            token:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmcm9udCIsImlhdCI6MTc1MTkwMzI5Mn0.4ANk5jn-BaOq9K3rfZnoW3D-vvSTPMN2CeDFElKN0HY",
+            token: WS_TOKEN,
             name: "js",
           },
-          id: 3,
+          id: 1,
         })
       );
 
-      socket!.send(
-        JSON.stringify({
-          subscribe: {
-            channel: "pumpfun-mintTokens",
-          },
-          id: 4,
-        })
-      );
+      // SUBSCRIBE to multiple channels
+      channels.forEach((ch, idx) => {
+        socket!.send(
+          JSON.stringify({
+            subscribe: { channel: ch },
+            id: 10 + idx,
+          })
+        );
+        console.log("📡 Subscribed to:", ch);
+      });
     };
 
     socket.onmessage = (event) => {
       if (typeof event.data !== "string") return;
 
-      const parts = event.data.split("\n").filter(Boolean);
+      try {
+        const msg = JSON.parse(event.data) as PushMessage;
 
-      for (const part of parts) {
-        try {
-          const msg = JSON.parse(part) as PushMessage;
+        if (!msg.push) return;
 
-          if (!msg.push) continue;
+        const channel = msg.push.channel;
+        const data = msg.push.pub?.data;
+        if (!data) return;
 
-          const data = msg.push.pub?.data;
-          if (!data) continue;
-
-          console.log("🔥 PUSH EVENT:", data);
-
-          // 👉 Передаем данные в компонент
-          onPush(data);
-        } catch {
-          // ignore
-        }
+        onPush(channel, data);
+      } catch (err) {
+        console.warn("WS parse error:", err);
       }
     };
 
+    socket.onerror = (err) => {
+      console.error("🔴 WS error:", err);
+    };
+
     socket.onclose = () => {
+      console.log("🟠 WS closed — reconnecting in 1s…");
+
       reconnectTimer = setTimeout(() => start(), 1000);
     };
   }
@@ -76,8 +86,9 @@ export function connect(onPush: (ev: PumpfunTokenEvent) => void) {
 
   return {
     close: () => {
-      clearTimeout(reconnectTimer);
+      if (reconnectTimer) clearTimeout(reconnectTimer);
       socket?.close();
+      alreadyStarted = false;
     },
   };
 }

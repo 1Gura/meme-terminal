@@ -29,7 +29,10 @@ export function PumpfunMintFeed() {
 
       <div className="mt-4">
         {items.map((item) => (
-          <Card className="bg-[#0f141b] border border-orange-500/20 rounded-xl shadow-md p-4 w-full">
+          <Card
+            key={item.token}
+            className="bg-[#0f141b] border border-orange-500/20 rounded-xl shadow-md p-4 w-full"
+          >
             <CardHeader className="pb-2">
               <CardTitle className="text-lg font-semibold text-orange-300 truncate">
                 {item.name}

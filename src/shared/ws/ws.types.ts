@@ -51,7 +51,6 @@ export interface PumpfunTokenEvent {
   configAddress: string | null;
 }
 
-// Само push-сообщение от Centrifugo
 export interface PushMessage {
   push: {
     channel: string;
@@ -59,4 +58,9 @@ export interface PushMessage {
       data: PumpfunTokenEvent;
     };
   };
+}
+
+interface ConnectOptions {
+  channels: string[];
+  onPush: (channel: string, data: PumpfunTokenEvent) => void;
 }

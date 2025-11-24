@@ -9,36 +9,29 @@ import {
   TableRow,
 } from "@/shared/components/ui/table";
 import Image from "next/image";
-import { useTokensQuery } from "@/shared/hooks/use-token-query";
-import { mockData } from "@/mocks/terminal-data.mock";
 import { ClientTime } from "@/shared/components/ClientTime";
 import { ClientNumber } from "@/shared/components/ClientNumber";
 import { shortAddress } from "@/shared/utils";
 import { CopyButton } from "@/shared/components/CopyButton";
 import { TradeButton } from "./TradeButton";
 import { useEffect, useState } from "react";
-import { TradeRowSkeleton } from "./TradeRowSkeleton";
+import { PumpfunTokenEvent } from "@/shared/ws/ws.types";
+import { connect } from "@/shared/ws/ws.native";
 
 function Terminal() {
-  const [events, setEvents] = useState([]);
-
-  const { data, isLoading } = useTokensQuery("1");
-
-  // пока используем мок
-  const tokens = mockData;
-
-  // ---- FAKE LOADING ----
-  const [fakeLoading, setFakeLoading] = useState(true);
+  const [tokens, setTokens] = useState<PumpfunTokenEvent[]>([]);
 
   useEffect(() => {
-    const timeout = setTimeout(
-      () => {
-        setFakeLoading(false);
-      },
-      Math.random() * 2000 + 300
+    const ws = connect(
+      "wss://launch.meme/connection/websocket",
+      ["pumpfun-mintTokens"],
+      (channel, data) => {
+        console.log("EVENT from", channel, data);
+        setTokens((prev) => [data, ...prev].slice(0, 50));
+      }
     );
 
-    return () => clearTimeout(timeout);
+    return () => ws?.close?.();
   }, []);
 
   return (
@@ -62,151 +55,114 @@ function Terminal() {
           <Table className="w-full">
             <TableHeader>
               <TableRow className="border-zinc-800">
-                {/* TOKEN */}
                 <TableHead className="min-w-[220px]">TOKEN</TableHead>
-
-                {/* CA */}
                 <TableHead className="min-w-[140px]">CA</TableHead>
-
-                {/* VOLUME */}
                 <TableHead className="min-w-[140px]">VOLUME</TableHead>
-
-                {/* MARKET CAP */}
                 <TableHead className="min-w-[140px]">MARKET CAP</TableHead>
-
-                {/* PROGRESS */}
                 <TableHead className="min-w-[240px]">PROGRESS</TableHead>
-
-                {/* HOLDERS */}
                 <TableHead className="min-w-[140px] text-right"># HOLDERS</TableHead>
-
-                {/* TRADE */}
                 <TableHead className="min-w-[140px] text-right">TRADE</TableHead>
               </TableRow>
             </TableHeader>
+
             <TableBody>
-              {/*{(*/}
-              {/*    <TableRow>*/}
-              {/*        <TableCell*/}
-              {/*            colSpan={6}*/}
-              {/*            className="text-center py-10 text-zinc-500"*/}
-              {/*        >*/}
-              {/*            Loading tokens...*/}
-              {/*        </TableCell>*/}
-              {/*    </TableRow>*/}
-              {/*)}*/}
+              {tokens.map((token) => (
+                <TableRow
+                  key={token.token}
+                  className="border-zinc-800 hover:bg-zinc-800/30 transition cursor-pointer"
+                >
+                  {/* TOKEN */}
+                  <TableCell className="min-w-[220px] whitespace-normal break-words">
+                    <div className="flex items-center gap-4">
+                      {token.photo ? (
+                        <Image
+                          width={48}
+                          height={48}
+                          src={token.photo}
+                          alt={token.name}
+                          className="w-12 h-12 rounded-xl object-cover"
+                        />
+                      ) : (
+                        <div className="w-12 h-12 rounded-xl bg-zinc-700" />
+                      )}
 
-              {fakeLoading
-                ? Array.from({ length: 10 }).map((_, index) => <TradeRowSkeleton key={index} />)
-                : tokens.map((token) => (
-                    <TableRow
-                      key={token._id}
-                      className="border-zinc-800 hover:bg-zinc-800/30 transition cursor-pointer"
-                    >
-                      {/* TOKEN */}
-                      <TableCell className="col-span-2 min-w-[220px] whitespace-normal break-words">
-                        <div className="flex items-center gap-4">
-                          {token.photo ? (
-                            <Image
-                              width={48}
-                              height={48}
-                              src={token.photo}
-                              alt={token.name}
-                              className="w-12 h-12 rounded-xl object-cover"
-                            />
-                          ) : (
-                            <div className="w-12 h-12 rounded-xl bg-zinc-700" />
-                          )}
-
-                          <div>
-                            <div className="font-medium text-white">{token.name}</div>
-
-                            {/* Клиентский вывод времени */}
-                            <div className="text-xs text-zinc-500">
-                              <ClientTime date={token.createdAt} />
-                            </div>
-                          </div>
+                      <div>
+                        <div className="font-medium text-white">{token.name}</div>
+                        <div className="text-xs text-zinc-500">
+                          <ClientTime date={token.mint_time.toString()} />
                         </div>
-                      </TableCell>
+                      </div>
+                    </div>
+                  </TableCell>
 
-                      {/* CA */}
-                      <TableCell className="min-w-[140px]">
-                        <div className="flex items-center">
-                          <span className="text-blue-400 cursor-pointer font-mono w-[100px]">
-                            {shortAddress(token.token, 4, 4)}
-                          </span>
+                  {/* CA */}
+                  <TableCell className="min-w-[140px]">
+                    <div className="flex items-center">
+                      <span className="text-blue-400 cursor-pointer font-mono w-[100px]">
+                        {shortAddress(token.token, 4, 4)}
+                      </span>
+                      <CopyButton text={token.token} />
+                    </div>
 
-                          <CopyButton text={token.token} />
-                        </div>
+                    <div className="text-xs text-zinc-500 flex gap-1">
+                      <span>by</span>
+                      <span className="text-blue-400 font-mono">
+                        {shortAddress(token.creator, 4, 4)}
+                      </span>
+                    </div>
+                  </TableCell>
 
-                        {/* Creator */}
-                        <div className="text-xs text-zinc-500 flex gap-1">
-                          <span>by</span>
-                          <span className="text-blue-400 font-mono">
-                            {shortAddress(token.creator, 4, 4)}
-                          </span>
-                        </div>
-                      </TableCell>
+                  {/* VOLUME */}
+                  <TableCell className="min-w-[140px]">
+                    <div className="flex flex-col">
+                      <span className="text-white">
+                        <ClientNumber
+                          value={token.volumeUsd ?? 0}
+                          options={{
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          }}
+                        />
+                      </span>
+                      <span className="text-xs">
+                        <span className="text-green-400">{token.buys}</span> /{" "}
+                        <span className="text-red-400">{token.sells}</span>
+                      </span>
+                    </div>
+                  </TableCell>
 
-                      {/* VOLUME */}
-                      <TableCell className="col-span-2 min-w-[140px] whitespace-normal break-words">
-                        <div className="flex flex-col">
-                          <span className="text-white">
-                            <ClientNumber
-                              value={token.marketCapUsd ?? 0}
-                              options={{
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2,
-                              }}
-                            />
-                          </span>
-                          <span className="text-xs">
-                            <span className="text-green-400">{token.buys}</span> /{" "}
-                            <span className="text-red-400">{token.sells}</span>
-                          </span>
-                        </div>
-                      </TableCell>
+                  {/* MARKET CAP */}
+                  <TableCell className="min-w-[140px]">
+                    <div className="flex flex-col">
+                      <span className="text-white">${token.marketCapUsd?.toFixed(2)}</span>
+                      <span className="text-xs text-zinc-500">${token.priceUsd?.toFixed(4)}</span>
+                    </div>
+                  </TableCell>
 
-                      {/* MARKET CAP */}
-                      <TableCell className="col-span-2 min-w-[140px] whitespace-normal break-words">
-                        <div className="flex flex-col">
-                          <span className="text-white">
-                            ${(token.marketCapUsd ?? 0).toFixed(2)}
-                          </span>
-                          <span className="text-xs text-zinc-500">
-                            ${token.priceUsd?.toFixed(4)}
-                          </span>
-                        </div>
-                      </TableCell>
+                  {/* PROGRESS */}
+                  <TableCell className="min-w-[240px]">
+                    <div className="flex flex-col gap-1.5">
+                      <div className="w-full h-2 bg-zinc-700 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-orange-400 transition-all"
+                          style={{ width: `${(token.progress ?? 0) * 100}%` }}
+                        />
+                      </div>
+                      <div className="text-[10px] text-muted-foreground">
+                        {Math.round((token.progress ?? 0) * 100)}%
+                      </div>
+                    </div>
+                  </TableCell>
 
-                      {/* PROGRESS */}
-                      <TableCell className="col-span-2 min-w-[240px] whitespace-normal break-words">
-                        <div className="flex flex-col gap-1.5">
-                          {/* Полоса прогресса */}
-                          <div className="w-full h-2 bg-zinc-700 rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-orange-400 transition-all"
-                              style={{ width: `${(token.progress ?? 0) * 100}%` }}
-                            />
-                          </div>
+                  {/* HOLDERS */}
+                  <TableCell className="text-right min-w-[140px]">{token.holders}</TableCell>
 
-                          {/* Текстовое значение */}
-                          <div className="text-[10px] text-muted-foreground">
-                            {Math.round((token.progress ?? 0) * 100)}%
-                          </div>
-                        </div>
-                      </TableCell>
-
-                      {/* HOLDERS */}
-                      <TableCell className="flex justify-end col-span-2 min-w-[140px] whitespace-normal break-words">
-                        {token.holders}
-                      </TableCell>
-                      {/* TRADE BUTTON */}
-                      <TableCell className="text-right min-w-[140px]">
-                        <TradeButton />
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {/* TRADE */}
+                  <TableCell className="text-right min-w-[140px]">
+                    <TradeButton />
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </div>
