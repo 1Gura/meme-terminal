@@ -27,10 +27,20 @@ interface TerminalProps {
 
 function Terminal({ initialTokens, isLoading = true }: TerminalProps) {
   const [tokens, setTokens] = useState<PumpfunToken[] | undefined>(initialTokens);
+  const [fallbackActive, setFallbackActive] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setFallbackActive(true);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [initialTokens]);
 
   useEffect(() => {
     setTokens(initialTokens);
   }, [initialTokens]);
+
   useEffect(() => {
     const ws = connect(
       "wss://launch.meme/connection/websocket",
@@ -96,7 +106,7 @@ function Terminal({ initialTokens, isLoading = true }: TerminalProps) {
             </TableHeader>
 
             <TableBody>
-              {isLoading
+              {!fallbackActive && isLoading
                 ? Array.from({ length: 10 }, (_, i) => <TradeRowSkeleton key={i} />)
                 : tokens?.map((token) => {
                     debugger;
