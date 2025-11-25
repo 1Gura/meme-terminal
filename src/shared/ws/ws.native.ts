@@ -1,12 +1,12 @@
 // ws-connect.ts
 import { WS_TOKEN } from "./ws.config";
-import { PumpfunTokenEvent } from "./ws.types";
+import { PumpfunToken } from "./ws.types";
 
 export interface PushMessage {
   push: {
     channel: string;
     pub: {
-      data: PumpfunTokenEvent;
+      data: PumpfunToken;
     };
   };
 }
@@ -16,7 +16,7 @@ let alreadyStarted = false;
 export function connect(
   url: string,
   channels: string[],
-  onPush: (channel: string, data: PumpfunTokenEvent) => void
+  onPush: (channel: string, data: PumpfunToken) => void
 ) {
   if (alreadyStarted) return;
   alreadyStarted = true;

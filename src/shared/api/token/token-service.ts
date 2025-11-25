@@ -62,7 +62,7 @@ export interface TokenListResponse {
 
 export const tokenService = {
   async getTokens({ page, version }: { page: string; version: string }) {
-    const response = await axios.post("https://launch.meme/api/tokens", {
+    const response = await axios.post("/api/tokens", {
       page,
       version,
     });

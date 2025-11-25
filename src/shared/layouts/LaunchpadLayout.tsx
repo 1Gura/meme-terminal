@@ -41,7 +41,7 @@ export function LaunchpadLayout({ children }: { children: ReactNode }) {
 
               <div>
                 <div className="text-xl font-bold text-orange-300">Launch Meme</div>
-                <div className="text-xs text-orange-200/60">Meme Terminal v0.0.1</div>
+                <div className="text-xs text-orange-200/60">Meme Terminal by iGura</div>
               </div>
             </div>
           </SidebarGroup>

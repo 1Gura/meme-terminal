@@ -7,11 +7,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/shared/components/ui/card";
-import { PumpfunTokenEvent } from "@/shared/ws/ws.types";
+import { PumpfunToken } from "@/shared/ws/ws.types";
 import { connect } from "@/shared/ws/ws.native";
 
 export function PumpfunMintFeed() {
-  const [items, setItems] = useState<PumpfunTokenEvent[]>([]);
+  const [items, setItems] = useState<PumpfunToken[]>([]);
 
   useEffect(() => {
     const ws = connect((data) => {

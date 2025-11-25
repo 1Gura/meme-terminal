@@ -11,7 +11,7 @@ export type WSPublication<T = unknown> = {
 };
 
 // Тип данных, приходящих в pub.data
-export interface PumpfunTokenEvent {
+export interface PumpfunToken {
   token: string;
   tokenType: string;
   supply: number;
@@ -55,12 +55,12 @@ export interface PushMessage {
   push: {
     channel: string;
     pub: {
-      data: PumpfunTokenEvent;
+      data: PumpfunToken;
     };
   };
 }
 
 interface ConnectOptions {
   channels: string[];
-  onPush: (channel: string, data: PumpfunTokenEvent) => void;
+  onPush: (channel: string, data: PumpfunToken) => void;
 }
