@@ -73,7 +73,7 @@ function Terminal({ initialTokens, isLoading = true }: TerminalProps) {
 
     return () => ws?.close?.();
   }, []);
-  debugger;
+
   return (
     <div className="w-full mx-auto">
       <div className="mt-8 flex items-center gap-3">
@@ -109,7 +109,6 @@ function Terminal({ initialTokens, isLoading = true }: TerminalProps) {
               {!fallbackActive && isLoading
                 ? Array.from({ length: 10 }, (_, i) => <TradeRowSkeleton key={i} />)
                 : tokens?.map((token) => {
-                    debugger;
                     return (
                       <TableRow
                         key={token.token}
