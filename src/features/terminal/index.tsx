@@ -6,7 +6,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/shared/components/ui/table";
-import { ClientTime } from "@/shared/components/ClientTime";
 import { ClientNumber } from "@/shared/components/ClientNumber";
 import { shortAddress } from "@/shared/utils";
 import { CopyButton } from "@/shared/components/CopyButton";
@@ -17,6 +16,8 @@ import { SafeImage } from "@/shared/components/SafeImage";
 import { TinyPrice } from "@/shared/components/FormatTinyNumber";
 import { connect } from "@/shared/ws/ws.native";
 import { TradeRowSkeleton } from "./TradeRowSkeleton";
+import { ClientTime } from "@/shared/components/ClientTime";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/components/ui/tooltip";
 
 interface TerminalProps {
   initialTokens?: PumpfunToken[];
@@ -107,25 +108,54 @@ function Terminal({ initialTokens, isLoading = true }: TerminalProps) {
                         {/* TOKEN */}
                         <TableCell className="min-w-[220px] whitespace-normal break-words">
                           <div className="flex items-center gap-4">
+                            {/* ==== АВАТАР + ВРЕМЯ ==== */}
                             {token.photo ? (
-                              <div className="w-12 h-12 flex-shrink-0 rounded-xl overflow-hidden bg-[#1f2937]">
-                                <SafeImage
-                                  width={48}
-                                  height={48}
-                                  src={token.photo}
-                                  alt={token.name}
-                                  className="w-12 h-12 rounded-xl object-cover"
-                                />
+                              <div className="flex flex-col items-center">
+                                <div className="w-12 h-12 flex-shrink-0 rounded-xl overflow-hidden bg-[#1f2937]">
+                                  <SafeImage
+                                    width={48}
+                                    height={48}
+                                    src={token.photo}
+                                    alt={token.name}
+                                    className="w-12 h-12 rounded-xl object-cover"
+                                  />
+                                </div>
+
+                                <div className="text-xs text-zinc-500 pt-1 text-center">
+                                  <ClientTime date={token.mint_time.toString()} />
+                                </div>
                               </div>
                             ) : (
                               <div className="w-12 h-12 rounded-xl bg-zinc-700" />
                             )}
 
-                            <div>
-                              <div className="font-medium text-white truncate block">{`${token.symbol} / ${token.name}`}</div>
-                              <div className="text-xs text-zinc-500">
-                                <ClientTime date={token.mint_time.toString()} />
+                            {/* ==== ТЕКСТ ==== */}
+                            <div className="max-w-[260px]">
+                              {/* SYMBOL / NAME */}
+                              <div className="font-medium text-white truncate block">
+                                {token.symbol} / {token.name}
                               </div>
+
+                              {/* DESCRIPTION (2 строки + tooltip) */}
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <div
+                                    className="
+                                    font-medium text-white/80
+                                    text-sm
+                                    line-clamp-2
+                                    cursor-help
+                                    max-w-[260px]
+                                  "
+                                  >
+                                    {token.description}
+                                  </div>
+                                </TooltipTrigger>
+
+                                <TooltipContent className="max-w-xs leading-relaxed">
+                                  {token.description}
+                                </TooltipContent>
+                              </Tooltip>
                             </div>
                           </div>
                         </TableCell>
