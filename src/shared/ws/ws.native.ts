@@ -1,42 +1,34 @@
-// ws-connect.ts
-import { WS_TOKEN } from "./ws.config";
-import { PumpfunToken } from "./ws.types";
+import { PumpfunToken, PushMessage } from "@/shared/ws/ws.types";
+import { WS_TOKEN } from "@/shared/ws/ws.config";
 
-export interface PushMessage {
-  push: {
-    channel: string;
-    pub: {
-      data: PumpfunToken;
-    };
-  };
-}
-
-let alreadyStarted = false;
+let socket: WebSocket | null = null;
+let reconnectTimer: NodeJS.Timeout | null = null;
+let isStarting = false;
+let listeners: Array<(ch: string, d: PumpfunToken) => void> = [];
 
 export function connect(
   url: string,
   channels: string[],
   onPush: (channel: string, data: PumpfunToken) => void
 ) {
-  if (alreadyStarted) return;
-  alreadyStarted = true;
+  listeners.push(onPush);
 
-  let socket: WebSocket | null = null;
-  let reconnectTimer: NodeJS.Timeout | null = null;
+  if (socket && socket.readyState !== WebSocket.CLOSED) {
+    return { close: unsubscribe };
+  }
+
+  if (isStarting) return { close: unsubscribe };
+  isStarting = true;
 
   function start() {
     socket = new WebSocket(url);
 
     socket.onopen = () => {
-      console.log("🟢 WS open:", url);
+      console.log("🟢 WS open");
 
-      // CONNECT handshake
       socket!.send(
         JSON.stringify({
-          connect: {
-            token: WS_TOKEN,
-            name: "js",
-          },
+          connect: { token: WS_TOKEN, name: "js" },
           id: 1,
         })
       );
@@ -49,45 +41,38 @@ export function connect(
           })
         );
       });
+
+      isStarting = false;
     };
 
     socket.onmessage = (event) => {
-      const text = typeof event.data === "string" ? event.data.trim() : "";
+      const txt = typeof event.data === "string" ? event.data.trim() : "";
+      if (!txt.startsWith("{")) return;
 
-      if (!text.startsWith("{")) return;
-
-      let json: any;
+      let json: PushMessage;
       try {
-        json = JSON.parse(text);
+        json = JSON.parse(txt);
       } catch {
         return;
       }
 
-      if (!json.push || !json.push.pub) return;
+      const ch = json.push?.channel;
+      const data = json.push?.pub?.data;
+      if (!ch || !data) return;
 
-      const channel = json.push.channel;
-      const data = json.push.pub.data;
-
-      if (data) onPush(channel, data);
-    };
-
-    socket.onerror = (err) => {
-      console.error("🔴 WS error:", err);
+      listeners.forEach((cb) => cb(ch, data));
     };
 
     socket.onclose = () => {
-      console.log("🟠 WS closed — reconnecting in 1s…");
       reconnectTimer = setTimeout(() => start(), 1000);
     };
   }
 
   start();
 
-  return {
-    close: () => {
-      if (reconnectTimer) clearTimeout(reconnectTimer);
-      socket?.close();
-      alreadyStarted = false;
-    },
-  };
+  return { close: unsubscribe };
+}
+
+function unsubscribe() {
+  listeners = [];
 }
