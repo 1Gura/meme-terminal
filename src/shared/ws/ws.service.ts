@@ -1,6 +1,15 @@
 import { WS_TOKEN, WS_URL } from "./ws.config";
-import type { WSCallback, WSChannel, WSSubscription } from "./ws.types";
+import type { PumpfunToken, WSCallback, WSChannel, WSSubscription } from "./ws.types";
 import { Centrifuge, type Subscription } from "centrifuge";
+
+export interface PumpfunPushMessage {
+  push: {
+    channel: string;
+    pub: {
+      data: PumpfunToken;
+    };
+  };
+}
 
 export class WebsocketService {
   private centrifuge = new Centrifuge(WS_URL, { token: WS_TOKEN });
@@ -9,6 +18,7 @@ export class WebsocketService {
   private reconnectAttempts = 0;
 
   private callbacks = new Map<WSChannel, WSCallback[]>();
+
   private activeSubs = new Map<WSChannel, Subscription>();
 
   constructor() {
@@ -23,7 +33,7 @@ export class WebsocketService {
       this.connected = true;
       this.reconnectAttempts = 0;
 
-      // Восстановить подписки после reconnect
+      // восстановление подписок после reconnect
       for (const [channel] of this.callbacks.entries()) {
         this.ensureSubscription(channel);
       }
@@ -31,6 +41,7 @@ export class WebsocketService {
 
     this.centrifuge.on("disconnected", () => {
       console.log("%c[WS] Disconnected", "color: #f87171");
+
       this.connected = false;
       this.scheduleReconnect();
     });
@@ -38,34 +49,43 @@ export class WebsocketService {
 
   private scheduleReconnect() {
     this.reconnectAttempts++;
-    const delay = Math.min(1000 * 2 ** this.reconnectAttempts, 15000);
 
+    const delay = Math.min(1000 * 2 ** this.reconnectAttempts, 15000);
     console.log(`[WS] reconnect in ${delay}ms`);
 
     setTimeout(() => this.centrifuge.connect(), delay);
   }
 
   /**
-   * Создать подписку, если её нет.
+   * Создаёт подписку на канал, если она ещё не создана
    */
   private ensureSubscription(channel: WSChannel) {
-    // если у нас уже есть Subscription в this.activeSubs – просто выходим
     if (this.activeSubs.has(channel)) return;
 
     const sub = this.centrifuge.newSubscription(channel);
 
     sub.on("publication", (ctx) => {
+      const msg = ctx.data as PumpfunPushMessage;
+      const data = msg?.push?.pub?.data;
+      if (!data) return;
+
       const cbs = this.callbacks.get(channel);
-      if (cbs) cbs.forEach((cb) => cb(ctx.data));
+      if (!cbs) return;
+
+      for (const cb of cbs) cb(data);
     });
 
     sub.subscribe();
     this.activeSubs.set(channel, sub);
   }
 
+  /**
+   * Основной API:
+   * subscribe("pumpfun-mintTokens", callback)
+   */
   subscribe<C extends WSChannel>(channel: C, callback: WSCallback<C>): WSSubscription {
-    const list = this.callbacks.get(channel) ?? [];
-    this.callbacks.set(channel, [...list, callback]);
+    const existing = this.callbacks.get(channel) ?? [];
+    this.callbacks.set(channel, [...existing, callback]);
 
     if (this.connected) {
       this.ensureSubscription(channel);
@@ -73,13 +93,12 @@ export class WebsocketService {
 
     return {
       unsubscribe: () => {
-        const current = this.callbacks.get(channel);
-        if (!current) return;
+        const list = this.callbacks.get(channel);
+        if (!list) return;
 
-        const nextList = current.filter((cb) => cb !== callback);
+        const filtered = list.filter((cb) => cb !== callback);
 
-        // если нет других подписчиков на этот канал
-        if (nextList.length === 0) {
+        if (filtered.length === 0) {
           this.callbacks.delete(channel);
 
           const sub = this.activeSubs.get(channel);
@@ -87,7 +106,6 @@ export class WebsocketService {
             try {
               sub.removeAllListeners();
               sub.unsubscribe();
-              // ключевой момент — удалить подписку из клиента Centrifuge
               this.centrifuge.removeSubscription(sub);
             } catch (e) {
               console.warn("[WS] unsubscribe cleanup error", e);
@@ -96,7 +114,7 @@ export class WebsocketService {
             this.activeSubs.delete(channel);
           }
         } else {
-          this.callbacks.set(channel, nextList);
+          this.callbacks.set(channel, filtered);
         }
       },
     };

@@ -8,12 +8,10 @@ export default function App({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(() => new QueryClient());
 
   return (
-    // <WebsocketProvider>
     <QueryClientProvider client={queryClient}>
       <LaunchpadLayout>
         <Component {...pageProps} />
       </LaunchpadLayout>
     </QueryClientProvider>
-    // </WebsocketProvider>
   );
 }

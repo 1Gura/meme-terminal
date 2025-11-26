@@ -4,17 +4,13 @@ import { CreateTokenForm } from "./CreateTokenForm";
 export default function CreateTokenPage() {
   return (
     <div className="w-full px-4">
-      {/* Заголовок */}
       <h1 className="text-2xl font-semibold mb-8 text-white">Create a new meme</h1>
 
-      {/* Две колонки */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-10">
-        {/* ==== ЛЕВАЯ КОЛОНКА — ЗАГРУЗКА КАРТИНКИ ==== */}
         <div className="bg-[#0f141d] border border-zinc-800 rounded-2xl p-4 flex flex-col items-center justify-center">
           <ImageUploadBox />
         </div>
 
-        {/* ==== ПРАВАЯ КОЛОНКА — ФОРМА ==== */}
         <div className="space-y-8">
           <CreateTokenForm />
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { Button } from "@/shared/components/ui/button";
 import {
   InputGroup,
@@ -46,7 +46,7 @@ export function CreateTokenForm() {
     return !Object.values(newErrors).some(Boolean);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
 
@@ -62,7 +62,6 @@ export function CreateTokenForm() {
       </p>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* NAME */}
         <div>
           <InputGroup>
             <InputGroupInput
@@ -82,7 +81,6 @@ export function CreateTokenForm() {
           </div>
         </div>
 
-        {/* TICKER */}
         <div>
           <InputGroup>
             <InputGroupInput

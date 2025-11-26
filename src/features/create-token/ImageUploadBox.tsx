@@ -71,17 +71,14 @@ export function ImageUploadBox() {
         onDragLeave={onDragLeave}
         onDrop={onDrop}
       >
-        {/* === PREVIEW MODE === */}
         {preview ? (
           <div className="relative w-full h-full flex items-center justify-center bg-[#0f141d] rounded-xl">
-            {/* IMAGE INSIDE SAFE CONTAINER */}
             <img
               src={preview}
               alt="Preview"
               className="max-w-full max-h-full object-contain rounded-xl p-1"
             />
 
-            {/* CLEAR BUTTON */}
             <Button
               variant="orange"
               size="icon-sm"
@@ -98,7 +95,6 @@ export function ImageUploadBox() {
             </Button>
           </div>
         ) : (
-          // === DEFAULT UPLOAD STATE ===
           <>
             <p className="text-lg mb-2">Upload an image</p>
             <p className="mb-4 text-sm">Drag & drop or select from your PC</p>
