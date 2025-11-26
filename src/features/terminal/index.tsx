@@ -18,6 +18,7 @@ import { connect } from "@/shared/ws/ws.native";
 import { TradeRowSkeleton } from "./TradeRowSkeleton";
 import { ClientTime } from "@/shared/components/ClientTime";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/components/ui/tooltip";
+import { Input } from "@/shared/components/ui/input";
 
 interface TerminalProps {
   initialTokens?: PumpfunToken[];
@@ -30,7 +31,15 @@ interface TerminalProps {
 function Terminal({ initialTokens, isLoading = true, page, setPage }: TerminalProps) {
   const [tokens, setTokens] = useState<PumpfunToken[] | undefined>(initialTokens);
   const [fallbackActive, setFallbackActive] = useState(false);
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 300);
 
+    return () => clearTimeout(handler);
+  }, [search]);
   useEffect(() => {
     const timer = setTimeout(() => {
       setFallbackActive(true);
@@ -49,6 +58,21 @@ function Terminal({ initialTokens, isLoading = true, page, setPage }: TerminalPr
 
     return Array.from(map.values());
   }, [initialTokens, tokens, page]);
+
+  const filteredTokens = useMemo(() => {
+    if (!debouncedSearch.trim()) return memoTokens;
+
+    const q = debouncedSearch.toLowerCase();
+
+    return memoTokens.filter((t) => {
+      return (
+        t.name?.toLowerCase().includes(q) ||
+        t.symbol?.toLowerCase().includes(q) ||
+        t.description?.toLowerCase().includes(q) ||
+        t.token?.toLowerCase().includes(q)
+      );
+    });
+  }, [debouncedSearch, memoTokens]);
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -98,13 +122,7 @@ function Terminal({ initialTokens, isLoading = true, page, setPage }: TerminalPr
   return (
     <div className="w-full mx-auto">
       <div className="mt-8 flex items-center gap-3">
-        <input
-          className="w-full h-12 rounded-xl bg-[#111827] px-4 text-sm text-zinc-300 border border-zinc-700 focus:outline-none"
-          placeholder="Search tokens..."
-        />
-        <button className="h-12 w-12 rounded-xl bg-orange-500 flex items-center justify-center hover:bg-orange-600 transition">
-          🔍
-        </button>
+        <Input onChange={(e) => setSearch(e.target.value)} placeholder="Search tokens..." />
       </div>
 
       {/* TABLE */}
@@ -129,7 +147,7 @@ function Terminal({ initialTokens, isLoading = true, page, setPage }: TerminalPr
             <TableBody>
               {!fallbackActive && isLoading
                 ? Array.from({ length: 10 }, (_, i) => <TradeRowSkeleton key={i} />)
-                : memoTokens?.map((token) => {
+                : filteredTokens?.map((token) => {
                     return (
                       <TableRow
                         key={token.token}
