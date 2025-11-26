@@ -17,9 +17,9 @@ export function LiveTokensListener() {
   const [events, setEvents] = useState<LiveTokenEvent[]>([]);
 
   useEffect(() => {
-    const ws = wsService; // <-- инстанс, а не функция
+    const ws = wsService;
 
-    const sub = ws.subscribe("pumpfun-mintTokens", (data) => {
+    const sub = ws.subscribe("meteora-x_stream", (data) => {
       console.log("WS DATA:", data);
     });
 

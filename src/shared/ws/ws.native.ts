@@ -41,7 +41,6 @@ export function connect(
         })
       );
 
-      // SUBSCRIBE to multiple channels
       channels.forEach((ch, idx) => {
         socket!.send(
           JSON.stringify({
@@ -49,26 +48,27 @@ export function connect(
             id: 10 + idx,
           })
         );
-        console.log("📡 Subscribed to:", ch);
       });
     };
 
     socket.onmessage = (event) => {
-      if (typeof event.data !== "string") return;
+      const text = typeof event.data === "string" ? event.data.trim() : "";
 
+      if (!text.startsWith("{")) return;
+
+      let json: any;
       try {
-        const msg = JSON.parse(event.data) as PushMessage;
-
-        if (!msg.push) return;
-
-        const channel = msg.push.channel;
-        const data = msg.push.pub?.data;
-        if (!data) return;
-
-        onPush(channel, data);
-      } catch (err) {
-        console.warn("WS parse error:", err);
+        json = JSON.parse(text);
+      } catch {
+        return;
       }
+
+      if (!json.push || !json.push.pub) return;
+
+      const channel = json.push.channel;
+      const data = json.push.pub.data;
+
+      if (data) onPush(channel, data);
     };
 
     socket.onerror = (err) => {
@@ -77,7 +77,6 @@ export function connect(
 
     socket.onclose = () => {
       console.log("🟠 WS closed — reconnecting in 1s…");
-
       reconnectTimer = setTimeout(() => start(), 1000);
     };
   }
