@@ -17,7 +17,8 @@ export class WebsocketService {
   private connected = false;
   private reconnectAttempts = 0;
 
-  private callbacks = new Map<WSChannel, WSCallback[]>();
+  // ключевой фикс: храним как массив ANY-колбэков
+  private callbacks = new Map<WSChannel, WSCallback<unknown>[]>();
 
   private activeSubs = new Map<WSChannel, Subscription>();
 
@@ -33,7 +34,6 @@ export class WebsocketService {
       this.connected = true;
       this.reconnectAttempts = 0;
 
-      // восстановление подписок после reconnect
       for (const [channel] of this.callbacks.entries()) {
         this.ensureSubscription(channel);
       }
@@ -56,9 +56,6 @@ export class WebsocketService {
     setTimeout(() => this.centrifuge.connect(), delay);
   }
 
-  /**
-   * Создаёт подписку на канал, если она ещё не создана
-   */
   private ensureSubscription(channel: WSChannel) {
     if (this.activeSubs.has(channel)) return;
 
@@ -79,13 +76,10 @@ export class WebsocketService {
     this.activeSubs.set(channel, sub);
   }
 
-  /**
-   * Основной API:
-   * subscribe("pumpfun-mintTokens", callback)
-   */
   subscribe<C extends WSChannel>(channel: C, callback: WSCallback<C>): WSSubscription {
+    // приводим callback к унифицированному типу
     const existing = this.callbacks.get(channel) ?? [];
-    this.callbacks.set(channel, [...existing, callback]);
+    this.callbacks.set(channel, [...existing, callback as WSCallback<unknown>]);
 
     if (this.connected) {
       this.ensureSubscription(channel);
