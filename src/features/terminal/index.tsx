@@ -40,10 +40,14 @@ function Terminal({ initialTokens, isLoading = true, page, setPage }: TerminalPr
   }, [initialTokens]);
 
   const memoTokens = useMemo(() => {
-    if (!tokens && initialTokens) {
-      return initialTokens;
+    const combined = tokens ? [...tokens, ...(initialTokens ?? [])] : (initialTokens ?? []);
+
+    const map = new Map<string, PumpfunToken>();
+    for (const t of combined) {
+      map.set(t.token, t); // последний wins
     }
-    return tokens ? [...tokens, ...(initialTokens ?? [])] : initialTokens;
+
+    return Array.from(map.values());
   }, [initialTokens, tokens, page]);
 
   const scrollRef = useRef<HTMLDivElement>(null);
