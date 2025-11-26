@@ -54,7 +54,7 @@ function Terminal({ initialTokens, isLoading = true, page, setPage }: TerminalPr
 
     const onScroll = () => {
       const bottom = elem.scrollTop + elem.clientHeight >= elem.scrollHeight - 50;
-      debugger;
+
       if (bottom) {
         setPage?.((p) => `${Number(p) + 1}`);
       }
