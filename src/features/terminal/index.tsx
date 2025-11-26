@@ -131,7 +131,7 @@ function Terminal({ initialTokens, isLoading = true, page, setPage }: TerminalPr
         style={{ maxHeight: "calc(100vh - 220px)" }}
       >
         <div ref={scrollRef} className="overflow-y-auto" style={{ height: "calc(100vh - 220px)" }}>
-          <Table className="w-full">
+          <Table className="w-full overflow-hidden">
             <TableHeader>
               <TableRow className="border-zinc-800">
                 <TableHead className="min-w-[220px]">TOKEN</TableHead>
