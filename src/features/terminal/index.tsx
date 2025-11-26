@@ -73,11 +73,9 @@ function Terminal({ initialTokens, isLoading = true, page, setPage }: TerminalPr
       "wss://launch.meme/connection/websocket",
       ["pumpfun-mintTokens", "pumpfun-tokenUpdates"],
       (channel, data) => {
-        // Новые токены — добавляем
         if (channel === "pumpfun-mintTokens") {
           setTokens((prev) => {
             if (prev) {
-              // если уже есть — не добавляем повтор
               if (prev.some((t) => t.token === data.token)) return prev;
               return [data, ...prev].slice(0, 50);
             }
@@ -87,11 +85,7 @@ function Terminal({ initialTokens, isLoading = true, page, setPage }: TerminalPr
         if (channel === "pumpfun-tokenUpdates") {
           setTokens((prev) => {
             if (prev) {
-              return prev.map((t) =>
-                t.token === data.token
-                  ? { ...t, ...data } // обновляем только существующий
-                  : t
-              );
+              return prev.map((t) => (t.token === data.token ? { ...t, ...data } : t));
             }
           });
         }
