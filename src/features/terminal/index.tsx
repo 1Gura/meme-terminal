@@ -10,7 +10,7 @@ import { ClientNumber } from "@/shared/components/ClientNumber";
 import { shortAddress } from "@/shared/utils";
 import { CopyButton } from "@/shared/components/CopyButton";
 import { TradeButton } from "./TradeButton";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from "react";
 import { PumpfunToken } from "@/shared/ws/ws.types";
 import { SafeImage } from "@/shared/components/SafeImage";
 import { TinyPrice } from "@/shared/components/FormatTinyNumber";
@@ -23,9 +23,11 @@ interface TerminalProps {
   initialTokens?: PumpfunToken[];
   isLoading?: boolean;
   error?: Error | null;
+  page: string;
+  setPage: Dispatch<SetStateAction<string>>;
 }
 
-function Terminal({ initialTokens, isLoading = true }: TerminalProps) {
+function Terminal({ initialTokens, isLoading = true, page, setPage }: TerminalProps) {
   const [tokens, setTokens] = useState<PumpfunToken[] | undefined>(initialTokens);
   const [fallbackActive, setFallbackActive] = useState(false);
 
@@ -37,9 +39,30 @@ function Terminal({ initialTokens, isLoading = true }: TerminalProps) {
     return () => clearTimeout(timer);
   }, [initialTokens]);
 
+  const memoTokens = useMemo(() => {
+    if (!tokens && initialTokens) {
+      return initialTokens;
+    }
+    return tokens ? [...tokens, ...(initialTokens ?? [])] : initialTokens;
+  }, [initialTokens, tokens, page]);
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    setTokens(initialTokens);
-  }, [initialTokens]);
+    const elem = scrollRef.current;
+    if (!elem) return;
+
+    const onScroll = () => {
+      const bottom = elem.scrollTop + elem.clientHeight >= elem.scrollHeight - 50;
+      debugger;
+      if (bottom) {
+        setPage?.((p) => `${Number(p) + 1}`);
+      }
+    };
+
+    elem.addEventListener("scroll", onScroll);
+    return () => elem.removeEventListener("scroll", onScroll);
+  }, [setPage]);
 
   useEffect(() => {
     const ws = connect(
@@ -91,7 +114,7 @@ function Terminal({ initialTokens, isLoading = true }: TerminalProps) {
         className="mt-10 rounded-xl border border-zinc-800 bg-[#0c121c]"
         style={{ maxHeight: "calc(100vh - 220px)" }}
       >
-        <div className="overflow-y-auto" style={{ height: "calc(100vh - 220px)" }}>
+        <div ref={scrollRef} className="overflow-y-auto" style={{ height: "calc(100vh - 220px)" }}>
           <Table className="w-full">
             <TableHeader>
               <TableRow className="border-zinc-800">
@@ -108,7 +131,7 @@ function Terminal({ initialTokens, isLoading = true }: TerminalProps) {
             <TableBody>
               {!fallbackActive && isLoading
                 ? Array.from({ length: 10 }, (_, i) => <TradeRowSkeleton key={i} />)
-                : tokens?.map((token) => {
+                : memoTokens?.map((token) => {
                     return (
                       <TableRow
                         key={token.token}

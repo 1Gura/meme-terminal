@@ -138,7 +138,7 @@ export function LaunchpadLayout({ children }: { children: ReactNode }) {
                     transition-colors
                 "
                 >
-                  <Link href="/auth/sign-in">
+                  <Link href="#">
                     <User />
                     <span>Sign In</span>
                   </Link>
@@ -156,7 +156,7 @@ export function LaunchpadLayout({ children }: { children: ReactNode }) {
                     mt-2
                 "
                 >
-                  <Link href="/auth/sign-up">
+                  <Link href="#">
                     <PlusCircle />
                     <span>Sign Up</span>
                   </Link>

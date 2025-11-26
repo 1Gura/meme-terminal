@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { tokenService } from "@/shared/api/token/token-service";
 import { PumpfunToken } from "@/shared/ws/ws.types";
 
@@ -21,5 +21,6 @@ export function useTokensQuery(page: string) {
     retry: 5,
     retryDelay: (attempt) => Math.min(2 ** attempt * 500, 8000),
     staleTime: 5000,
+    placeholderData: keepPreviousData,
   });
 }
