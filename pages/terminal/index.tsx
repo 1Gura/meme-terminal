@@ -8,5 +8,7 @@ export default function TerminalPage() {
   const [page, setPage] = useState(INITIAL_PAGE);
   const { data, isLoading } = useTokensQuery(page);
 
-  return <Terminal initialTokens={data ?? []} isLoading={isLoading} setPage={setPage} />;
+  return (
+    <Terminal initialTokens={data ?? []} isLoading={isLoading} page={page} setPage={setPage} />
+  );
 }
