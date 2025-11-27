@@ -126,11 +126,8 @@ function Terminal({ initialTokens, isLoading = true, page, setPage }: TerminalPr
       </div>
 
       {/* TABLE */}
-      <div
-        className="mt-10 rounded-xl border border-zinc-800 bg-[#0c121c]"
-        style={{ maxHeight: "calc(100vh - 220px)" }}
-      >
-        <div ref={scrollRef} className="overflow-y-auto" style={{ height: "calc(100vh - 220px)" }}>
+      <div className="mt-6 rounded-xl border border-zinc-800">
+        <div ref={scrollRef} className="overflow-y-auto" style={{ height: "calc(100vh - 140px)" }}>
           <Table className="w-full overflow-hidden">
             <TableHeader>
               <TableRow className="border-zinc-800">
