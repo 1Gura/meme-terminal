@@ -1,7 +1,6 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { Button } from "@/shared/components/ui/button";
 import {
   InputGroup,
   InputGroupInput,
@@ -121,10 +120,6 @@ export function CreateTokenForm() {
             {errors.description && <p className="text-red-400 text-xs">{errors.description}</p>}
           </div>
         </div>
-
-        <Button type="submit" variant="orange">
-          Create token
-        </Button>
       </form>
     </section>
   );

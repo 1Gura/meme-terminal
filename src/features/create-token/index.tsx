@@ -1,7 +1,17 @@
 import { ImageUploadBox } from "./ImageUploadBox";
 import { CreateTokenForm } from "./CreateTokenForm";
+import { Button } from "@/shared/components/ui/button";
+import { toast } from "sonner";
 
 export default function CreateTokenPage() {
+  const showFakeToast = () => {
+    toast("Wallet is not connected", {
+      action: {
+        label: "Undo",
+        onClick: () => console.log("Undo"),
+      },
+    });
+  };
   return (
     <div className="w-full px-4">
       <h1 className="text-2xl font-semibold mb-8 text-white">Create a new meme</h1>
@@ -23,6 +33,10 @@ export default function CreateTokenPage() {
             <h2 className="text-lg font-semibold mb-2 text-white">3. Advanced</h2>
             <p className="text-sm text-zinc-500">Coming soon…</p>
           </section>
+
+          <Button type="submit" variant="orange" className="my-4" onClick={showFakeToast}>
+            Create token
+          </Button>
         </div>
       </div>
     </div>

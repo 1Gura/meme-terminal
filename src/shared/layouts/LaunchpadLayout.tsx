@@ -17,6 +17,7 @@ import { useRouter } from "next/router";
 import { MobileHeader } from "@/shared/components/MobileHeader";
 import SpotlightCursor from "@/shared/components/SpootlightCursor";
 import { LiveTokensListener } from "@/shared/components/LiveTokenListener";
+import { Toaster } from "@/shared/components/ui/sonner";
 
 export function LaunchpadLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
@@ -172,6 +173,7 @@ export function LaunchpadLayout({ children }: { children: ReactNode }) {
             {children}
           </div>
         </main>
+        <Toaster />
       </div>
     </SidebarProvider>
   );
